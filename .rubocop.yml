@@ -1,6 +1,7 @@
 require:
   - rubocop-rails
   - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   SuggestExtensions: false
@@ -18,3 +19,6 @@ Style/Documentation:
 
 Style/ClassAndModuleChildren:
   Enabled: false
+
+RSpec/ImplicitExpect:
+  EnforcedStyle: should
