@@ -22,3 +22,6 @@ Style/ClassAndModuleChildren:
 
 RSpec/ImplicitExpect:
   EnforcedStyle: should
+
+RSpec/MultipleExpectations:
+  Max: 2
