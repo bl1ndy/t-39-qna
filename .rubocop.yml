@@ -25,3 +25,11 @@ RSpec/ImplicitExpect:
 
 RSpec/MultipleExpectations:
   Max: 2
+
+RSpec/Capybara/FeatureMethods:
+  EnabledMethods:
+    - feature
+    - scenario
+    - given
+    - given!
+    - background
