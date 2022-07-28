@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show] # rubocop:disable Rails/LexicallyScopedActionFilter
 
   expose :questions, -> { Question.all }
-  expose :question
+  expose :question, :set_question
   expose :answers, from: :question
   expose :answer, -> { question.answers.build }
 
@@ -27,12 +27,22 @@ class QuestionsController < ApplicationController
   def destroy
     question.destroy
 
-    redirect_to questions_path
+    redirect_to questions_path, notice: 'Your Question successfully deleted!'
   end
 
   private
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def set_question
+    if params[:id]
+      Question.find_by(id: params[:id])
+    elsif params[:question]
+      current_user.questions.build(question_params)
+    else
+      current_user.questions.build
+    end
   end
 end
