@@ -2,12 +2,12 @@
 
 class AnswersController < ApplicationController
   expose :question
+  expose :answers, -> { question.answers.select(&:persisted?) }
+  expose :answer, -> { question.answers.build(answer_params) }
 
   def create
-    answer = question.answers.build(answer_params)
-
     if answer.save
-      redirect_to question
+      redirect_to question, notice: 'Your Answer successfully created!'
     else
       render 'questions/show'
     end
