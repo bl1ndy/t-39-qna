@@ -24,7 +24,7 @@ RSpec/ImplicitExpect:
   EnforcedStyle: should
 
 RSpec/MultipleExpectations:
-  Max: 2
+  Max: 3
 
 RSpec/Capybara/FeatureMethods:
   EnabledMethods:
