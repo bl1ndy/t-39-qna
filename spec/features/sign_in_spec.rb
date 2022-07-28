@@ -20,7 +20,7 @@ feature 'User can sign in.', %(
   end
 
   scenario 'Unregistered user tries to sign in' do
-    fill_in 'Email', with: 'user@test.com'
+    fill_in 'Email', with: 'wrong@test.com'
     fill_in 'Password', with: '12345678'
     click_on 'Log in'
 
