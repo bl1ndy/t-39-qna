@@ -1,2 +1,7 @@
 div
   = link_to 'Ask a Question', new_question_path
+
+ul
+  - questions.each do |question|
+    li
+      h3= question.title
