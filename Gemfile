@@ -7,6 +7,7 @@ ruby '3.1.2'
 
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'decent_exposure', '~> 3.0', '>= 3.0.4'
+gem 'devise', '~> 4.8', '>= 4.8.1'
 gem 'jbuilder', '~> 2.7'
 gem 'net-smtp', require: false
 gem 'pg', '~> 1.4', '>= 1.4.1'
@@ -37,6 +38,7 @@ end
 
 group :test do
   gem 'capybara', '>= 3.26'
+  gem 'launchy', '~> 2.5'
   gem 'rails-controller-testing', '~> 1.0', '>= 1.0.5'
   gem 'selenium-webdriver', '>= 4.0.0.rc1'
   gem 'shoulda-matchers', '~> 5.1'
