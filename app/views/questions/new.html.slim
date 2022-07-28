@@ -1,0 +1,9 @@
+div
+  = form_with(model: question, local: true) do |f|
+    = render 'shared/errors', object: f.object
+
+    = f.label :title
+    = f.text_field :title
+    = f.label :body, 'Text'
+    = f.text_area :body
+    = f.submit 'Create'
