@@ -12,8 +12,11 @@ html
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
 
   body
+    = render 'shared/menu'
+
     p class="notice"
       = notice
     p class="alert"
       = alert
+
     = yield
