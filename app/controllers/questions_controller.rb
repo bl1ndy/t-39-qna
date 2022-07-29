@@ -1,31 +1,44 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show] # rubocop:disable Rails/LexicallyScopedActionFilter
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :set_question, only: %i[show edit update destroy]
 
-  expose :questions, -> { Question.all }
-  expose :question, :set_question
-  expose :answers, from: :question
-  expose :answer, -> { question.answers.build }
+  def index
+    @questions = Question.all
+  end
+
+  def new
+    @question = current_user.questions.build
+  end
 
   def create
-    if question.save
-      redirect_to question, notice: 'Your Question successfully created!'
+    @question = current_user.questions.build(question_params)
+
+    if @question.save
+      redirect_to @question, notice: 'Your Question successfully created!'
     else
       render :new
     end
   end
 
+  def show
+    @answers = @question.answers.select(&:persisted?)
+    @answer = @question.answers.build
+  end
+
+  def edit; end
+
   def update
-    if question.update(question_params)
-      redirect_to question
+    if @question.update(question_params)
+      redirect_to @question
     else
       render :edit
     end
   end
 
   def destroy
-    question.destroy
+    @question.destroy
 
     redirect_to questions_path, notice: 'Your Question successfully deleted!'
   end
@@ -37,12 +50,6 @@ class QuestionsController < ApplicationController
   end
 
   def set_question
-    if params[:id]
-      Question.find_by(id: params[:id])
-    elsif params[:question]
-      current_user.questions.build(question_params)
-    else
-      current_user.questions.build
-    end
+    @question = Question.find(params[:id])
   end
 end

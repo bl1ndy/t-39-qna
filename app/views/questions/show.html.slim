@@ -1,27 +1,27 @@
 div
-  h1= question.title
-  p= question.body
+  h1= @question.title
+  p= @question.body
 
-  - if current_user == question.user
+  - if current_user == @question.user
     = link_to 'Delete Question',
-              question_path(question),
+              question_path(@question),
               method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
 
 div
   ul
-    - answers.each do |answer|
+    - @answers.each do |answer|
       li
         = answer.body
         - if current_user == answer.user
           = link_to 'Delete Answer',
-                    question_answer_path(question, answer),
+                    question_answer_path(@question, answer),
                     method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
 
 - if user_signed_in?
   h2 Your Answer
 
   div
-    = form_with(model: [question, answer], local: true) do |f|
+    = form_with(model: [@question, @answer], local: true) do |f|
       = render 'shared/errors', object: f.object
 
       = f.label :body, 'Text'

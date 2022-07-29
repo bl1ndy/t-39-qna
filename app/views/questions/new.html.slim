@@ -1,5 +1,5 @@
 div
-  = form_with(model: question, local: true) do |f|
+  = form_with(model: @question, local: true) do |f|
     = render 'shared/errors', object: f.object
 
     = f.label :title

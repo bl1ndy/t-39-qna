@@ -1,24 +1,27 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  expose :question
-  expose :answers, -> { question.answers.select(&:persisted?) }
-  expose :answer, :set_answer
+  before_action :authenticate_user!, only: %i[create destroy]
+  before_action :set_answer, only: :destroy
+  before_action :set_question, only: %i[create destroy]
 
   def create
-    answer.user = current_user
+    @answer = @question.answers.build(answer_params)
+    @answer.user = current_user
 
-    if answer.save
-      redirect_to question, notice: 'Your Answer successfully created!'
+    if @answer.save
+      redirect_to @question, notice: 'Your Answer successfully created!'
     else
+      @answers = @question.answers.select(&:persisted?)
+
       render 'questions/show'
     end
   end
 
   def destroy
-    answer.destroy
+    @answer.destroy
 
-    redirect_to question, notice: 'Your Answer successfully deleted!'
+    redirect_to @question, notice: 'Your Answer successfully deleted!'
   end
 
   private
@@ -28,12 +31,10 @@ class AnswersController < ApplicationController
   end
 
   def set_answer
-    if params[:id]
-      Answer.find(params[:id])
-    elsif params[:answer]
-      question.answers.build(answer_params)
-    else
-      question.answers.build
-    end
+    @answer = Answer.find(params[:id])
+  end
+
+  def set_question
+    @question = Question.find(params[:question_id])
   end
 end
