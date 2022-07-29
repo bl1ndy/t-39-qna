@@ -8,7 +8,7 @@ feature "User can see whole question and question's answers", %(
   I'd like to be able to see question and all question's answers
 ) do
   given(:question) { create(:question) }
-  given!(:answers) { create_list(:answer, 5, question:) }
+  given!(:answers) { create_list(:answer, 5, question:, user: create(:user)) }
 
   scenario "Guest sees question and all question's answers" do
     visit question_path(question)
