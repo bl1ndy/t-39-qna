@@ -24,7 +24,7 @@ class AnswersController < ApplicationController
 
       redirect_to @question, notice: 'Your Answer successfully deleted!'
     else
-      redirect_to @question, alert: 'You do not have permissions for this action.'
+      head :forbidden
     end
   end
 

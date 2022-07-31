@@ -31,9 +31,11 @@ feature 'User can delete his answer', %(
     end
   end
 
-  scenario 'Guest does not see delete button on any answer' do
-    visit question_path(question)
+  describe 'Guest' do
+    scenario 'does not see delete button on any answer' do
+      visit question_path(question)
 
-    expect(page).to have_no_link('Delete Answer')
+      expect(page).to have_no_link('Delete Answer')
+    end
   end
 end

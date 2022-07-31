@@ -32,9 +32,17 @@ feature 'User can create an answer on the question page', %(
     end
   end
 
-  scenario 'Guest does not see answer form' do
-    visit question_path(question)
+  describe 'Guest' do
+    scenario 'does not see answer form' do
+      visit question_path(question)
 
-    expect(page).not_to have_content('Post Your Answer')
+      expect(page).not_to have_content('Post Your Answer')
+    end
+
+    scenario 'redirects to sign_in page' do
+      visit new_question_path
+
+      expect(page).to have_current_path(new_user_session_path)
+    end
   end
 end
