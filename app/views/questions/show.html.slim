@@ -7,22 +7,19 @@ div
               question_path(@question),
               method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
 
+h2 Answers
+
 div
-  ul
-    - @answers.each do |answer|
-      li
-        = answer.body
-        - if current_user == answer.user
-          = link_to 'Delete Answer',
-                    question_answer_path(@question, answer),
-                    method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
+  ul.answers
+    = render @answers
 
 - if user_signed_in?
   h2 Your Answer
 
   div
-    = form_with(model: [@question, @answer], local: true) do |f|
-      = render 'shared/errors', object: f.object
+    = form_with(model: [@question, @answer], local: false) do |f|
+      .answer-errors
+        = render 'shared/errors', object: f.object
 
       = f.label :body, 'Text'
       = f.text_area :body

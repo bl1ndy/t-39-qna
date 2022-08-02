@@ -6,14 +6,13 @@ feature 'User can create an answer on the question page', %(
   In order to answer somebody's question
   As an authenticated user
   I'd like to be able to create an answer
-) do
+), js: true do
   given(:user) { create(:user) }
   given(:question) { create(:question) }
 
   describe 'Authenticated user' do
     background do
       sign_in(user)
-
       visit question_path(question)
     end
 
@@ -21,7 +20,6 @@ feature 'User can create an answer on the question page', %(
       fill_in 'Text', with: 'Test Answer text'
       click_button 'Post Your Answer'
 
-      expect(page).to have_content('Your Answer successfully created!')
       expect(page).to have_content('Test Answer text')
     end
 
