@@ -17,8 +17,8 @@ div
   h2 Your Answer
 
   div
-    = form_with(model: [@question, @answer], local: false) do |f|
-      .answer-errors
+    = form_with(model: [@question, @answer], class: 'new-answer-form', local: false) do |f|
+      .new-answer-errors
         = render 'shared/errors', object: f.object
 
       = f.label :body, 'Text'

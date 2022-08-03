@@ -57,6 +57,24 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      before { login(user) }
+
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
+        answer.reload
+        expect(answer.body).to eq('edited answer')
+      end
+
+      it 'renders update' do
+        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
+
+        expect(response).to render_template :update
+      end
+    end
+  end
+
   describe 'DELETE #destroy' do
     context "when user is answer's author" do
       before { login(user) }

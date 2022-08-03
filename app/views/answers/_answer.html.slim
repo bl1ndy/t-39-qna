@@ -1,6 +1,16 @@
 li
-  = answer.body
+  => answer.body
   - if current_user == answer.user
+    => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete Answer',
-              question_answer_path(@question, answer),
+              answer_path(answer),
               method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
+
+    div
+      = form_with(model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false) do |f|
+        .edit-answer-errors
+          = render 'shared/errors', object: f.object
+
+        = f.label :body, 'Text'
+        = f.text_area :body
+        = f.submit 'Save'
