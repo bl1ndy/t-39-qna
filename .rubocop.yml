@@ -23,6 +23,9 @@ Style/ClassAndModuleChildren:
 RSpec/ImplicitExpect:
   EnforcedStyle: should
 
+RSpec/ExampleLength:
+  Max: 10
+
 RSpec/MultipleExpectations:
   Max: 3
 

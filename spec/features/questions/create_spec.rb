@@ -17,7 +17,6 @@ feature 'User can create a question', %(
       click_on 'Ask a Question'
     end
 
-    # rubocop:disable RSpec/ExampleLength
     scenario 'creates a question' do
       fill_in 'Title', with: 'Test Question title'
       fill_in 'Text', with: 'Test Question text'
@@ -27,7 +26,6 @@ feature 'User can create a question', %(
       expect(page).to have_content('Test Question title')
       expect(page).to have_content('Test Question text')
     end
-    # rubocop:enable RSpec/ExampleLength
 
     scenario 'creates a question with errors' do
       click_button 'Create'
