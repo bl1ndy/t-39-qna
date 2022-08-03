@@ -27,7 +27,7 @@ feature 'User can delete his answer', %(
     end
 
     scenario 'does not see delete button on someone else answer' do
-      expect(page).to have_no_link('Delete Answer', href: question_answer_path(question, answer2))
+      expect(page).to have_no_link('Delete Answer', href: answer_path(answer2))
     end
   end
 
