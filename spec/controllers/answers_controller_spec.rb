@@ -15,12 +15,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'saves a new answer for current question in the database' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
         end.to change(Answer, :count).by(1)
       end
 
       it 'renders create' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
         expect(response).to render_template :create
       end
@@ -31,12 +31,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not save an answer' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+          post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
         end.not_to change(Answer, :count)
       end
 
       it 'renders create' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
 
         expect(response).to render_template :create
       end
@@ -45,81 +45,82 @@ RSpec.describe AnswersController, type: :controller do
     context 'when user is not authenticated' do
       it 'does not save an answer' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }
+          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
         end.not_to change(Answer, :count)
       end
 
-      it 'redirects to sign_in' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+      it 'gets 401 status' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
 
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
   describe 'PATCH #update' do
     context 'with valid attributes' do
-      before { login(user) }
+      before do
+        login(user)
+        patch :update, params: { id: answer, answer: { body: 'edited answer' } }, format: :js
+      end
 
       it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
         answer.reload
 
         expect(answer.body).to eq('edited answer')
       end
 
       it 'renders update' do
-        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
-
         expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
-      before { login(user) }
+      before do
+        login(user)
+        patch :update, params: { id: answer, answer: { body: '' } }, format: :js
+      end
 
       it 'does not change answer attributes' do
-        patch :update, params: { id: answer, answer: { body: '' }, format: :js }
         answer.reload
 
         expect(answer.body).not_to eq('')
       end
 
       it 'renders update' do
-        patch :update, params: { id: answer, answer: { body: '' }, format: :js }
-
         expect(response).to render_template :update
       end
     end
 
     context "when user is not answer's author" do
-      before { login(user) }
+      before do
+        login(user)
+        patch :update, params: { id: another_answer, answer: { body: 'edited answer' } }, format: :js
+      end
 
       it 'does not change answer attributes' do
-        patch :update, params: { id: another_answer, answer: { body: 'edited answer' }, format: :js }
         answer.reload
 
         expect(answer.body).not_to eq('edited answer')
       end
 
       it 'gets 403 status' do
-        patch :update, params: { id: another_answer, answer: { body: 'edited answer' }, format: :js }
-
         expect(response).to have_http_status(:forbidden)
       end
     end
 
     context 'when user is not authenticated' do
+      before do
+        patch :update, params: { id: answer, answer: { body: 'edited answer' } }, format: :js
+      end
+
       it 'does not change answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
         answer.reload
 
         expect(answer.body).not_to eq('edited answer')
       end
 
       it 'gets 401 status' do
-        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
-
         expect(response).to have_http_status(:unauthorized)
       end
     end
@@ -130,13 +131,15 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       it 'deletes an answer' do
-        expect { delete :destroy, params: { id: answer, question_id: question } }.to change(Answer, :count).by(-1)
+        expect do
+          delete :destroy, params: { id: answer, question_id: question }, format: :js
+        end.to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to question' do
-        delete :destroy, params: { id: answer, question_id: question }
+      it 'renders destroy' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
 
-        expect(response).to redirect_to question
+        expect(response).to render_template :destroy
       end
     end
 
@@ -145,12 +148,12 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not delete an answer' do
         expect do
-          delete :destroy, params: { id: another_answer, question_id: question }
+          delete :destroy, params: { id: another_answer, question_id: question }, format: :js
         end.not_to change(Answer, :count)
       end
 
       it 'gets 403 status' do
-        delete :destroy, params: { id: another_answer, question_id: question }
+        delete :destroy, params: { id: another_answer, question_id: question }, format: :js
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -159,14 +162,14 @@ RSpec.describe AnswersController, type: :controller do
     context 'when user is not authenticated' do
       it 'does not delete an answer' do
         expect do
-          delete :destroy, params: { id: answer, question_id: question }
+          delete :destroy, params: { id: answer, question_id: question }, format: :js
         end.not_to change(Answer, :count)
       end
 
-      it 'redirects to sign_in' do
-        delete :destroy, params: { id: answer, question_id: question }
+      it 'gets 401 status' do
+        delete :destroy, params: { id: another_answer, question_id: question }, format: :js
 
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

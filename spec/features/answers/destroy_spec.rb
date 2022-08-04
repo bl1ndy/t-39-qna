@@ -6,28 +6,31 @@ feature 'User can delete his answer', %(
   In order to avoid redundant answers
   As an authenticated user
   I'd like to be able to delete my answers
-) do
-  given(:user1) { create(:user) }
-  given(:user2) { create(:user) }
-  given(:question) { create(:question, user: user2) }
-  given!(:answer1) { create(:answer, question:, user: user1) }
-  given!(:answer2) { create(:answer, question:, user: user2) }
+), js: true do
+  given(:user) { create(:user) }
+  given(:another_user) { create(:user) }
+  given(:question) { create(:question, user:) }
+  given!(:answer) { create(:answer, question:, user:) }
+  given!(:another_answer) { create(:answer, question:, user: another_user) }
 
   describe 'Authenticated user' do
     background do
-      sign_in(user1)
+      sign_in(user)
       visit question_path(question)
     end
 
     scenario 'delete his answer' do
-      click_link 'Delete Answer'
+      accept_confirm do
+        click_link 'Delete Answer'
+      end
 
-      expect(page).to have_content('Your Answer successfully deleted!')
-      expect(page).to have_no_content(answer1.body)
+      expect(page).to have_no_content(answer.body)
     end
 
     scenario 'does not see delete button on someone else answer' do
-      expect(page).to have_no_link('Delete Answer', href: answer_path(answer2))
+      within "#answer-#{another_answer.id}" do
+        expect(page).not_to have_link('Delete Answer')
+      end
     end
   end
 
@@ -35,7 +38,9 @@ feature 'User can delete his answer', %(
     scenario 'does not see delete button on any answer' do
       visit question_path(question)
 
-      expect(page).to have_no_link('Delete Answer')
+      within('.answers') do
+        expect(page).to have_no_link('Delete Answer')
+      end
     end
   end
 end

@@ -24,8 +24,6 @@ class AnswersController < ApplicationController
 
     if current_user == @answer.user
       @answer.destroy
-
-      redirect_to @question, notice: 'Your Answer successfully deleted!'
     else
       head :forbidden
     end
