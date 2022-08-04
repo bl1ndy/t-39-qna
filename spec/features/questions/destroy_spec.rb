@@ -7,31 +7,39 @@ feature 'User can delete his question', %(
   As an authenticated user
   I'd like to be able to delete my questions
 ) do
-  given(:users) { create_list(:user, 2) }
-  given(:question) { create(:question, user: users.first) }
-  given(:other_question) { create(:question, user: users.last) }
+  given(:user) { create(:user) }
+  given(:another_user) { create(:user) }
+  given(:question) { create(:question, user:) }
+  given(:another_question) { create(:question, user: another_user) }
 
   describe 'Authenticated user' do
-    background { sign_in(users.first) }
+    background { sign_in(user) }
 
     scenario 'delete his question' do
       visit question_path(question)
-      click_link 'Delete Question'
+
+      within '.question' do
+        click_link 'Delete'
+      end
 
       expect(page).to have_content('Your Question successfully deleted!')
       expect(page).not_to have_content(question.title)
     end
 
     scenario 'does not see delete button on someone else question' do
-      visit question_path(other_question)
+      visit question_path(another_question)
 
-      expect(page).not_to have_content('Delete Question')
+      within '.question' do
+        expect(page).not_to have_link('Delete')
+      end
     end
   end
 
   scenario 'Guest does not see delete button on any question' do
     visit question_path(question)
 
-    expect(page).not_to have_content('Delete Question')
+    within '.question' do
+      expect(page).not_to have_link('Delete')
+    end
   end
 end

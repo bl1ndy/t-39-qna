@@ -99,9 +99,9 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'does not change answer attributes' do
-        answer.reload
+        another_answer.reload
 
-        expect(answer.body).not_to eq('edited answer')
+        expect(another_answer.body).not_to eq('edited answer')
       end
 
       it 'gets 403 status' do
@@ -167,7 +167,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'gets 401 status' do
-        delete :destroy, params: { id: another_answer, question_id: question }, format: :js
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
 
         expect(response).to have_http_status(:unauthorized)
       end

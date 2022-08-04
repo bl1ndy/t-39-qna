@@ -2,7 +2,7 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show edit update destroy]
+  before_action :set_question, only: %i[show update destroy]
 
   def index
     @questions = Question.all
@@ -27,20 +27,22 @@ class QuestionsController < ApplicationController
     @answer = @question.answers.build
   end
 
-  def edit; end
-
   def update
-    if @question.update(question_params)
-      redirect_to @question
+    if current_user == @question.user
+      @question.update(question_params)
     else
-      render :edit
+      head :forbidden
     end
   end
 
   def destroy
-    @question.destroy
+    if current_user == @question.user
+      @question.destroy
 
-    redirect_to questions_path, notice: 'Your Question successfully deleted!'
+      redirect_to questions_path, notice: 'Your Question successfully deleted!'
+    else
+      head :forbidden
+    end
   end
 
   private
