@@ -64,6 +64,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
         answer.reload
+
         expect(answer.body).to eq('edited answer')
       end
 
@@ -71,6 +72,55 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
 
         expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before { login(user) }
+
+      it 'does not change answer attributes' do
+        patch :update, params: { id: answer, answer: { body: '' }, format: :js }
+        answer.reload
+
+        expect(answer.body).not_to eq('')
+      end
+
+      it 'renders update' do
+        patch :update, params: { id: answer, answer: { body: '' }, format: :js }
+
+        expect(response).to render_template :update
+      end
+    end
+
+    context "when user is not answer's author" do
+      before { login(user) }
+
+      it 'does not change answer attributes' do
+        patch :update, params: { id: another_answer, answer: { body: 'edited answer' }, format: :js }
+        answer.reload
+
+        expect(answer.body).not_to eq('edited answer')
+      end
+
+      it 'gets 403 status' do
+        patch :update, params: { id: another_answer, answer: { body: 'edited answer' }, format: :js }
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not change answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
+        answer.reload
+
+        expect(answer.body).not_to eq('edited answer')
+      end
+
+      it 'gets 401 status' do
+        patch :update, params: { id: answer, answer: { body: 'edited answer' }, format: :js }
+
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

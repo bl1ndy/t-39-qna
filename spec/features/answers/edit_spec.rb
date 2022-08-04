@@ -42,13 +42,21 @@ feature 'User can edit his answer', %(
         expect(page).to have_content("Body can't be blank")
       end
     end
+
+    scenario 'does not see edit link on someone else answer' do
+      within "#answer-#{another_answer.id}" do
+        expect(page).not_to have_link('Edit')
+      end
+    end
   end
 
   describe 'Guest' do
-    scenario 'can not open edit form' do
+    scenario 'does not see edit link on any answer' do
       visit question_path(question)
 
-      expect(page).not_to have_link('Edit')
+      within '.answers' do
+        expect(page).not_to have_link('Edit')
+      end
     end
   end
 end

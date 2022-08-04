@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy]
+  before_action :authenticate_user!, only: %i[create update destroy]
   before_action :set_answer, only: %i[update destroy]
   before_action :set_question, only: :create
 
@@ -11,7 +11,12 @@ class AnswersController < ApplicationController
 
   def update
     @question = @answer.question
-    @answer.update(answer_params)
+
+    if current_user == @answer.user
+      @answer.update(answer_params)
+    else
+      head :forbidden
+    end
   end
 
   def destroy
