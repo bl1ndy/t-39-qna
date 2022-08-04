@@ -1,4 +1,4 @@
-li
+li id="answer-#{answer.id}"
   => answer.body
   - if current_user == answer.user
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
