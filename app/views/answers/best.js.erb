@@ -1,0 +1,3 @@
+<% if @question.best_answer == @answer %>
+  $('#answer-' + <%= @answer.id %>).prepend('Best answer: ')
+<% end %>

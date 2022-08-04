@@ -173,4 +173,22 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'POST #best' do
+    context "when user is question's author" do
+      before do
+        login(user)
+        post :best, params: { id: answer }, format: :js
+      end
+
+      it "makes an answer the best for it's question" do
+        question.reload
+        expect(question.best_answer).to eq(answer)
+      end
+
+      it 'renders best' do
+        expect(response).to render_template :best
+      end
+    end
+  end
 end

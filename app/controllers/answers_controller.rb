@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create update destroy]
-  before_action :set_answer, only: %i[update destroy]
-  before_action :set_question, only: :create
+  before_action :authenticate_user!
+  before_action :set_answer, only: %i[update destroy best]
+  before_action :set_question, only: %i[update destroy best]
 
   def create
+    @question = Question.find(params[:question_id])
     @answer = @question.answers.create(answer_params.merge(user: current_user))
   end
 
   def update
-    @question = @answer.question
-
     if current_user == @answer.user
       @answer.update(answer_params)
     else
@@ -20,13 +19,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @question = @answer.question
-
     if current_user == @answer.user
       @answer.destroy
     else
       head :forbidden
     end
+  end
+
+  def best
+    @question.mark_as_best(@answer)
   end
 
   private
@@ -40,6 +41,6 @@ class AnswersController < ApplicationController
   end
 
   def set_question
-    @question = Question.find(params[:question_id])
+    @question = @answer.question
   end
 end

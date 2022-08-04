@@ -5,6 +5,7 @@ li id="answer-#{answer.id}"
     = link_to 'Delete Answer',
               answer_path(answer),
               method: :delete, data: { confirm: 'Are you sure?' }, remote: true
+    = button_to 'Best', best_answer_path(answer), remote: true
 
     div
       = form_with(model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false) do |f|
