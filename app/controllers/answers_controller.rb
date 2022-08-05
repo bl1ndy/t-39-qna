@@ -27,7 +27,11 @@ class AnswersController < ApplicationController
   end
 
   def best
-    @question.mark_as_best(@answer)
+    if current_user == @question.user
+      @question.mark_as_best(@answer)
+    else
+      head :forbidden
+    end
   end
 
   private

@@ -183,11 +183,43 @@ RSpec.describe AnswersController, type: :controller do
 
       it "makes an answer the best for it's question" do
         question.reload
+
         expect(question.best_answer).to eq(answer)
       end
 
       it 'renders best' do
         expect(response).to render_template :best
+      end
+    end
+
+    context "when user isn't question's author" do
+      before do
+        login(another_user)
+        post :best, params: { id: answer }, format: :js
+      end
+
+      it "does not makes an answer the best for it's question" do
+        question.reload
+
+        expect(question.best_answer).not_to eq(answer)
+      end
+
+      it 'gets 403 status' do
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      before { post :best, params: { id: answer }, format: :js }
+
+      it "does not makes an answer the best for it's question" do
+        question.reload
+
+        expect(question.best_answer).not_to eq(answer)
+      end
+
+      it 'gets 401 status' do
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

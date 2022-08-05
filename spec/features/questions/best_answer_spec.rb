@@ -11,6 +11,7 @@ feature 'User can mark preferred answer as the best for his question', %(
   given(:another_user) { create(:user) }
   given(:question) { create(:question, user:) }
   given!(:answer) { create(:answer, question:, user:) }
+  given!(:another_answer) { create(:answer, question:, user:) }
 
   describe "Question's author" do
     scenario 'marks an answer as the best' do
@@ -33,6 +34,22 @@ feature 'User can mark preferred answer as the best for his question', %(
       within '.answers' do
         expect(page).to have_no_button('Best')
       end
+    end
+  end
+
+  describe 'Question' do
+    scenario 'has only one best answer' do
+      sign_in(user)
+      visit question_path(question)
+      within "#answer-#{answer.id}" do
+        click_button 'Best'
+      end
+      within "#answer-#{another_answer.id}" do
+        click_button 'Best'
+      end
+
+      sleep 0.1
+      expect(page).to have_selector('.best-label', count: 1)
     end
   end
 end

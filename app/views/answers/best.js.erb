@@ -1,3 +1,4 @@
 <% if @question.best_answer == @answer %>
-  $('#answer-' + <%= @answer.id %>).prepend('Best answer: ')
+  $('.best-label').remove()
+  $("<span class='best-label'>Best answer: </span>").prependTo('#answer-' + <%= @answer.id %>)
 <% end %>

@@ -1,4 +1,8 @@
 li id="answer-#{answer.id}"
+  - if answer == @question.best_answer
+    span.best-label
+      'Best answer:
+
   => answer.body
   - if current_user == answer.user
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
