@@ -37,19 +37,29 @@ feature 'User can mark preferred answer as the best for his question', %(
     end
   end
 
-  describe 'Question' do
-    scenario 'has only one best answer' do
+  describe 'User' do
+    before do
       sign_in(user)
       visit question_path(question)
+
       within "#answer-#{answer.id}" do
         click_button 'Best'
       end
+
       within "#answer-#{another_answer.id}" do
         click_button 'Best'
       end
+    end
 
-      sleep 0.1
+    scenario 'sees only one best answer on current question' do
+      sleep(0.1)
       expect(page).to have_selector('.best-label', count: 1)
+    end
+
+    scenario 'does not see Best button on already marked answer' do
+      within "#answer-#{another_answer.id}" do
+        expect(page).to have_no_button('Best')
+      end
     end
   end
 end

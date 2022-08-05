@@ -25,6 +25,8 @@ h2 Answers
 
 div
   ul.answers
+    - if @best_answer
+      = render @best_answer
     = render @answers
 
 - if user_signed_in?

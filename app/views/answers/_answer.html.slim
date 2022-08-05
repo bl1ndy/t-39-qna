@@ -1,15 +1,20 @@
 li id="answer-#{answer.id}"
-  - if answer == @question.best_answer
+  - if answer == @best_answer
     span.best-label
       'Best answer:
 
   => answer.body
+  - if current_user == @question.user
+    = button_to 'Best',
+      best_answer_path(answer),
+      class: "best-answer-button #{'hidden' if answer == @best_answer}",
+      remote: true
+
   - if current_user == answer.user
     => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
     = link_to 'Delete Answer',
               answer_path(answer),
               method: :delete, data: { confirm: 'Are you sure?' }, remote: true
-    = button_to 'Best', best_answer_path(answer), remote: true
 
     div
       = form_with(model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false) do |f|

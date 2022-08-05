@@ -50,6 +50,6 @@ ActiveRecord::Schema.define(version: 2022_08_04_201750) do
 
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
-  add_foreign_key "questions", "answers", column: "best_answer_id"
+  add_foreign_key "questions", "answers", column: "best_answer_id", on_delete: :nullify
   add_foreign_key "questions", "users"
 end

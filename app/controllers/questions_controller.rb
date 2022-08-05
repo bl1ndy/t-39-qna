@@ -23,7 +23,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answers = @question.answers.select(&:persisted?)
+    @best_answer = @question.best_answer
+    @answers = @question.answers.where.not(id: @best_answer&.id)
     @answer = @question.answers.build
   end
 

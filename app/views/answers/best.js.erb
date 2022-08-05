@@ -1,4 +1,10 @@
 <% if @question.best_answer == @answer %>
+  answer = $('#answer-' + <%= @answer.id %>)
+  answerBestButton = $('#answer-' + <%= @answer.id %> + ' .best-answer-button')
+
   $('.best-label').remove()
-  $("<span class='best-label'>Best answer: </span>").prependTo('#answer-' + <%= @answer.id %>)
+  $("<span class='best-label'>Best answer: </span>").prependTo(answer)
+  $('.best-answer-button').removeClass('hidden')
+  answerBestButton.addClass('hidden')
+  answer.prependTo('.answers')
 <% end %>
