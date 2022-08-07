@@ -4,6 +4,11 @@ div.question
   p.question-body
     = @question.body
 
+  - if @question.files.attached?
+    - @question.files.each do |file|
+      p.question-file-link
+        = link_to file.filename.to_s, url_for(file)
+
   - if current_user == @question.user
     => link_to 'Edit', '#', class: 'edit-question-link'
     = link_to 'Delete',

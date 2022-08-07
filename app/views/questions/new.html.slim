@@ -4,6 +4,11 @@ div
 
     = f.label :title
     = f.text_field :title
+
     = f.label :body, 'Text'
     = f.text_area :body
+
+    = f.label :files
+    = f.file_field :files, multiple: true
+
     = f.submit 'Create'

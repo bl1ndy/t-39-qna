@@ -6,6 +6,7 @@ RSpec.describe Question, type: :model do
   describe 'associations' do
     it { should have_many(:answers) }
     it { should belong_to(:best_answer).class_name('Answer').optional }
+    it { should have_many_attached(:files) }
   end
 
   describe 'validations' do
