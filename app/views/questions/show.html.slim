@@ -1,13 +1,15 @@
 div.question
   h1.question-title
     = @question.title
+
   p.question-body
     = @question.body
 
-  - if @question.files.attached?
-    - @question.files.each do |file|
-      p.question-file-link
-        = link_to file.filename.to_s, url_for(file)
+  div.question-files
+    - if @question.files.attached?
+      - @question.files.each do |file|
+        p.question-file-link
+          = link_to file.filename.to_s, url_for(file)
 
   - if current_user == @question.user
     => link_to 'Edit', '#', class: 'edit-question-link'
@@ -22,8 +24,13 @@ div.question
 
         = f.label :title
         = f.text_field :title
+
         = f.label :body, 'Text'
         = f.text_area :body
+
+        = f.label :files
+        = f.file_field :files, multiple: true
+
         = f.submit 'Save'
 
 h2 Answers

@@ -36,7 +36,39 @@ feature 'User can edit his question', %(
     end
     # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
-    scenario 'edits his answer with errors' do
+    scenario 'edits his question with attached files' do
+      visit question_path(question)
+
+      within '.question' do
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+        click_button 'Save'
+
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
+    end
+
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'adds new file to existing one instead of replacing it' do
+      visit question_path(question)
+
+      within '.question' do
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb')]
+        click_button 'Save'
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/spec_helper.rb')]
+        click_button 'Save'
+
+        sleep 0.1
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
+
+    scenario 'edits his question with errors' do
       visit question_path(question)
 
       within '.question' do
