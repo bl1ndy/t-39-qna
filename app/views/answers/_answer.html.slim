@@ -4,6 +4,12 @@ li id="answer-#{answer.id}"
       'Best answer:
 
   => answer.body
+
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      p.answer-file-link
+        = link_to file.filename.to_s, url_for(file)
+
   - if current_user == @question.user
     = button_to 'Best',
       best_answer_path(answer),

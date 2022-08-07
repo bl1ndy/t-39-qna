@@ -23,6 +23,15 @@ feature 'User can create an answer on the question page', %(
       expect(page).to have_content('Test Answer text')
     end
 
+    scenario 'creates an answer with attached files' do
+      fill_in 'Text', with: 'Test Answer text'
+      attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+      click_button 'Post Your Answer'
+
+      expect(page).to have_link('rails_helper.rb')
+      expect(page).to have_link('spec_helper.rb')
+    end
+
     scenario 'creates an answer with errors' do
       click_button 'Post Your Answer'
 

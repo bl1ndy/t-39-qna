@@ -23,8 +23,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @best_answer = @question.best_answer
-    @answers = @question.answers.where.not(id: @best_answer&.id)
+    @best_answer = @question.best_answer&.with_attached_files
+    @answers = @question.answers.where.not(id: @best_answer&.id).with_attached_files
     @answer = @question.answers.build
   end
 
