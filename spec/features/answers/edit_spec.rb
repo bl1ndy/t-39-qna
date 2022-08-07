@@ -20,9 +20,8 @@ feature 'User can edit his answer', %(
     end
 
     scenario 'edits his answer' do
-      click_link 'Edit'
-
       within '.answers' do
+        click_link 'Edit'
         fill_in 'Text', with: 'edited answer'
         click_button 'Save'
 
@@ -31,6 +30,34 @@ feature 'User can edit his answer', %(
         expect(page).not_to have_selector('textarea')
       end
     end
+
+    scenario 'edits his answer with attached files' do
+      within '.answers' do
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+        click_button 'Save'
+
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
+    end
+
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'adds new file to existing one instead of replacing it' do
+      within '.answers' do
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb')]
+        click_button 'Save'
+        click_link 'Edit'
+        attach_file 'Files', [Rails.root.join('spec/spec_helper.rb')]
+        click_button 'Save'
+
+        sleep 0.1
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
 
     scenario 'edits his answer with errors' do
       click_link 'Edit'
