@@ -6,7 +6,6 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
   let!(:question) { create(:question, user:) }
-  let!(:another_question) { create(:question, user: another_user) }
   let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
 
   describe 'GET #index' do
@@ -136,20 +135,20 @@ RSpec.describe QuestionsController, type: :controller do
 
     context "when user is not question's author" do
       before do
-        login(user)
+        login(another_user)
         patch :update,
               params: {
-                id: another_question,
+                id: question,
                 question: { title: 'updated title', body: 'updated body', files: [file] }
               },
               format: :js
       end
 
-      it 'does not change answer attributes' do
-        another_question.reload
+      it 'does not change question attributes' do
+        question.reload
 
-        expect(another_question.title).to eq('MyQuestionTitle')
-        expect(another_question.body).to eq('MyQuestionText')
+        expect(question.title).to eq('MyQuestionTitle')
+        expect(question.body).to eq('MyQuestionText')
         expect(question.files).to be_empty
       end
 
@@ -168,7 +167,7 @@ RSpec.describe QuestionsController, type: :controller do
               format: :js
       end
 
-      it 'does not change answer attributes' do
+      it 'does not change question attributes' do
         question.reload
 
         expect(question.title).to eq('MyQuestionTitle')
@@ -198,16 +197,16 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context "when user is not question's author" do
-      before { login(user) }
+      before { login(another_user) }
 
       it 'does not delete the question' do
         expect do
-          delete :destroy, params: { id: another_question }
+          delete :destroy, params: { id: question }
         end.not_to change(Question, :count)
       end
 
       it 'gets 403 status' do
-        delete :destroy, params: { id: another_question }
+        delete :destroy, params: { id: question }
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -234,17 +233,10 @@ RSpec.describe QuestionsController, type: :controller do
         io: File.open(Rails.root.join('spec/rails_helper.rb')),
         filename: 'rails_helper.rb'
       )
-
-      another_question.files.attach(
-        io: File.open(Rails.root.join('spec/rails_helper.rb')),
-        filename: 'rails_helper.rb'
-      )
     end
 
     context "when user is question's author" do
-      before do
-        login(user)
-      end
+      before { login(user) }
 
       it 'deletes attached file' do
         expect do
@@ -264,21 +256,19 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context "when user is not question's author" do
-      before do
-        login(user)
-      end
+      before { login(another_user) }
 
       it 'does not delete attached file' do
         expect do
           delete :destroy_file,
-                 params: { id: another_question, file_id: another_question.files.first.id },
+                 params: { id: question, file_id: question.files.first.id },
                  format: :js
         end.not_to change(question.files, :count)
       end
 
       it 'gets 403 status' do
         delete :destroy_file,
-               params: { id: another_question, file_id: another_question.files.first.id },
+               params: { id: question, file_id: question.files.first.id },
                format: :js
 
         expect(response).to have_http_status(:forbidden)
