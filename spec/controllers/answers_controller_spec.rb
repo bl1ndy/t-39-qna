@@ -7,7 +7,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:another_user) { create(:user) }
   let(:question) { create(:question, user:) }
   let!(:answer) { create(:answer, question:, user:) }
-  let!(:another_answer) { create(:answer, question:, user: another_user) }
+  let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -15,12 +15,16 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'saves a new answer for current question in the database' do
         expect do
-          post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+          post :create,
+               params: { question_id: question, answer: attributes_for(:answer).merge(files: [file]) },
+               format: :js
         end.to change(Answer, :count).by(1)
       end
 
       it 'renders create' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+        post :create,
+             params: { question_id: question, answer: attributes_for(:answer).merge(files: [file]) },
+             format: :js
 
         expect(response).to render_template :create
       end
@@ -61,13 +65,16 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       before do
         login(user)
-        patch :update, params: { id: answer, answer: { body: 'edited answer' } }, format: :js
+        patch :update,
+              params: { id: answer, answer: { body: 'edited answer', files: [file] } },
+              format: :js
       end
 
       it 'changes answer attributes' do
         answer.reload
 
         expect(answer.body).to eq('edited answer')
+        expect(answer.files.first.filename).to eq('rails_helper.rb')
       end
 
       it 'renders update' do
@@ -94,14 +101,16 @@ RSpec.describe AnswersController, type: :controller do
 
     context "when user is not answer's author" do
       before do
-        login(user)
-        patch :update, params: { id: another_answer, answer: { body: 'edited answer' } }, format: :js
+        login(another_user)
+        patch :update,
+              params: { id: answer, answer: { body: 'edited answer', files: [file] } },
+              format: :js
       end
 
       it 'does not change answer attributes' do
-        another_answer.reload
+        answer.reload
 
-        expect(another_answer.body).not_to eq('edited answer')
+        expect(answer.body).not_to eq('edited answer')
       end
 
       it 'gets 403 status' do
@@ -111,13 +120,16 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'when user is not authenticated' do
       before do
-        patch :update, params: { id: answer, answer: { body: 'edited answer' } }, format: :js
+        patch :update,
+              params: { id: answer, answer: { body: 'edited answer', files: [file] } },
+              format: :js
       end
 
       it 'does not change answer attributes' do
         answer.reload
 
         expect(answer.body).not_to eq('edited answer')
+        expect(answer.files).to be_empty
       end
 
       it 'gets 401 status' do
@@ -144,16 +156,16 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context "when user is not answer's author" do
-      before { login(user) }
+      before { login(another_user) }
 
       it 'does not delete an answer' do
         expect do
-          delete :destroy, params: { id: another_answer, question_id: question }, format: :js
+          delete :destroy, params: { id: answer, question_id: question }, format: :js
         end.not_to change(Answer, :count)
       end
 
       it 'gets 403 status' do
-        delete :destroy, params: { id: another_answer, question_id: question }, format: :js
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
 
         expect(response).to have_http_status(:forbidden)
       end
@@ -219,6 +231,77 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'gets 401 status' do
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
+  describe 'DELETE#destroy_file' do
+    before do
+      answer.files.attach(
+        io: File.open(Rails.root.join('spec/rails_helper.rb')),
+        filename: 'rails_helper.rb'
+      )
+    end
+
+    context "when user is answer's author" do
+      before do
+        login(user)
+      end
+
+      it 'deletes attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: answer, file_id: answer.files.first.id },
+                 format: :js
+        end.to change(answer.files, :count).by(-1)
+      end
+
+      it 'renders destroy_file' do
+        delete :destroy_file,
+               params: { id: answer, file_id: answer.files.first.id },
+               format: :js
+
+        expect(response).to render_template :destroy_file
+      end
+    end
+
+    context "when user is not answer's author" do
+      before do
+        login(another_user)
+      end
+
+      it 'does not delete attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: answer, file_id: answer.files.first.id },
+                 format: :js
+        end.not_to change(answer.files, :count)
+      end
+
+      it 'gets 403 status' do
+        delete :destroy_file,
+               params: { id: answer, file_id: answer.files.first.id },
+               format: :js
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not delete attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: answer, file_id: answer.files.first.id },
+                 format: :js
+        end.not_to change(answer.files, :count)
+      end
+
+      it 'gets 401 status' do
+        delete :destroy_file,
+               params: { id: answer, file_id: answer.files.first.id },
+               format: :js
+
         expect(response).to have_http_status(:unauthorized)
       end
     end

@@ -11,7 +11,13 @@ feature 'User can edit his answer', %(
   given(:another_user) { create(:user) }
   given(:question) { create(:question) }
   given!(:answer) { create(:answer, question:, user:) }
-  given!(:another_answer) { create(:answer, question:, user: another_user) }
+
+  background do
+    answer.files.attach(
+      io: File.open(Rails.root.join('spec/support/factory_bot.rb')),
+      filename: 'factory_bot.rb'
+    )
+  end
 
   describe 'Authenticated user' do
     background do
@@ -37,27 +43,19 @@ feature 'User can edit his answer', %(
         attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
         click_button 'Save'
 
+        expect(page).to have_link('factory_bot.rb') # check that first attachment is not replaced by new files
         expect(page).to have_link('rails_helper.rb')
         expect(page).to have_link('spec_helper.rb')
       end
     end
 
-    # rubocop:disable RSpec/ExampleLength
-    scenario 'adds new file to existing one instead of replacing it' do
-      within '.answers' do
-        click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb')]
-        click_button 'Save'
-        click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/spec_helper.rb')]
-        click_button 'Save'
+    scenario 'deletes attached file' do
+      within "#answer-#{answer.id} .answer-files" do
+        click_link 'Delete'
 
-        sleep 0.1
-        expect(page).to have_link('rails_helper.rb')
-        expect(page).to have_link('spec_helper.rb')
+        expect(page).to have_no_link('factory_bot.rb')
       end
     end
-    # rubocop:enable RSpec/ExampleLength
 
     scenario 'edits his answer with errors' do
       click_link 'Edit'
@@ -69,20 +67,39 @@ feature 'User can edit his answer', %(
         expect(page).to have_content("Body can't be blank")
       end
     end
+  end
 
-    scenario 'does not see edit link on someone else answer' do
-      within "#answer-#{another_answer.id}" do
+  describe "Not answer's author" do
+    background do
+      sign_in(another_user)
+      visit question_path(question)
+    end
+
+    scenario 'does not see edit link on answer' do
+      within "#answer-#{answer.id}" do
         expect(page).not_to have_link('Edit')
+      end
+    end
+
+    scenario 'does not see delete link on files in answer' do
+      within "#answer-#{answer.id} .answer-files" do
+        expect(page).not_to have_link('Delete')
       end
     end
   end
 
   describe 'Guest' do
-    scenario 'does not see edit link on any answer' do
-      visit question_path(question)
+    background { visit question_path(question) }
 
+    scenario 'does not see edit link in answer' do
       within '.answers' do
         expect(page).not_to have_link('Edit')
+      end
+    end
+
+    scenario 'does not see delete link on files in answer' do
+      within "#answer-#{answer.id} .answer-files" do
+        expect(page).not_to have_link('Delete')
       end
     end
   end

@@ -1,0 +1,7 @@
+p id="answer-file-#{file.id}"
+  => link_to file.filename.to_s, url_for(file)
+
+  - if current_user == answer.user
+    = link_to 'Delete',
+      destroy_file_answer_path(answer, file_id: file.id),
+      method: :delete, remote: true
