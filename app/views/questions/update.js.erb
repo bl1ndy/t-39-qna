@@ -4,13 +4,7 @@ $('.question-errors').html('<%= render 'shared/errors', object: @question %>')
   $('.question-title').html('<%= @question.title %>')
   $('.question-body').html('<%= @question.body %>')
 
-  $('.question-files').html('')
-
-  <% @question.files.each do |file| %>
-    link = '<%= link_to file.filename.to_s, url_for(file) %>'
-
-    $('.question-files').append("<p class='question-file-link'>" + link + '</p>')
-  <% end %>
+  $('.question-files').html('<%= j render partial: 'file', collection: @question.files %>')
 
   $('.edit-question-form').addClass('hidden')
   $('.edit-question-link').show()

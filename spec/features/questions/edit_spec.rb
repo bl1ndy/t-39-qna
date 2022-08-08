@@ -10,17 +10,22 @@ feature 'User can edit his question', %(
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given(:question) { create(:question, user:) }
-  given(:another_question) { create(:question, user: another_user) }
+
+  background do
+    question.files.attach(
+      io: File.open(Rails.root.join('spec/support/factory_bot.rb')),
+      filename: 'factory_bot.rb'
+    )
+  end
 
   describe 'Authenticated user' do
     background do
       sign_in(user)
+      visit question_path(question)
     end
 
     # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
     scenario 'edits his question' do
-      visit question_path(question)
-
       within '.question' do
         click_link 'Edit'
         fill_in 'Title', with: 'edited title'
@@ -37,40 +42,26 @@ feature 'User can edit his question', %(
     # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
     scenario 'edits his question with attached files' do
-      visit question_path(question)
-
       within '.question' do
         click_link 'Edit'
         attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
         click_button 'Save'
 
+        expect(page).to have_link('factory_bot.rb') # check that first attachment is not replaced by new files
         expect(page).to have_link('rails_helper.rb')
         expect(page).to have_link('spec_helper.rb')
       end
     end
 
-    # rubocop:disable RSpec/ExampleLength
-    scenario 'adds new file to existing one instead of replacing it' do
-      visit question_path(question)
+    scenario 'deletes attached file' do
+      within '.question-files' do
+        click_link 'Delete'
 
-      within '.question' do
-        click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb')]
-        click_button 'Save'
-        click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/spec_helper.rb')]
-        click_button 'Save'
-
-        sleep 0.1
-        expect(page).to have_link('rails_helper.rb')
-        expect(page).to have_link('spec_helper.rb')
+        expect(page).to have_no_link('factory_bot.rb')
       end
     end
-    # rubocop:enable RSpec/ExampleLength
 
     scenario 'edits his question with errors' do
-      visit question_path(question)
-
       within '.question' do
         click_link 'Edit'
         fill_in 'Title', with: ''
@@ -81,28 +72,39 @@ feature 'User can edit his question', %(
         expect(page).to have_content("Body can't be blank")
       end
     end
+  end
 
-    scenario 'does not see edit link on someone else question' do
-      visit question_path(another_question)
+  describe "Not question's author" do
+    background do
+      sign_in(another_user)
+      visit question_path(question)
+    end
 
+    scenario 'does not see edit link on question' do
       within '.question' do
         expect(page).not_to have_link('Edit')
+      end
+    end
+
+    scenario 'does not see delete link on files in someone else question' do
+      within '.question-files' do
+        expect(page).not_to have_link('Delete')
       end
     end
   end
 
   describe 'Guest' do
-    scenario 'does not see edit link on any question' do
-      visit question_path(question)
+    background { visit question_path(question) }
 
+    scenario 'does not see edit link in question' do
       within '.question' do
         expect(page).not_to have_link('Edit')
       end
+    end
 
-      visit question_path(another_question)
-
-      within '.question' do
-        expect(page).not_to have_link('Edit')
+    scenario 'does not see delete link on files in question' do
+      within '.question-files' do
+        expect(page).not_to have_link('Delete')
       end
     end
   end

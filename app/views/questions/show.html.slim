@@ -7,9 +7,7 @@ div.question
 
   div.question-files
     - if @question.files.attached?
-      - @question.files.each do |file|
-        p.question-file-link
-          = link_to file.filename.to_s, url_for(file)
+      = render partial: 'file', collection: @question.files
 
   - if current_user == @question.user
     => link_to 'Edit', '#', class: 'edit-question-link'

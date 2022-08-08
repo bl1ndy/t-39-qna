@@ -7,6 +7,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:another_user) { create(:user) }
   let!(:question) { create(:question, user:) }
   let!(:another_question) { create(:question, user: another_user) }
+  let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
 
   describe 'GET #index' do
     it 'renders index view' do
@@ -46,11 +47,14 @@ RSpec.describe QuestionsController, type: :controller do
       before { login(user) }
 
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect do
+          post :create,
+               params: { question: attributes_for(:question).merge(files: [file]) }
+        end.to change(Question, :count).by(1)
       end
 
       it 'redirects to show' do
-        post :create, params: { question: attributes_for(:question) }
+        post :create, params: { question: attributes_for(:question).merge(files: [file]) }
 
         expect(response).to redirect_to assigns(:question)
       end
@@ -90,7 +94,10 @@ RSpec.describe QuestionsController, type: :controller do
       before do
         login(user)
         patch :update,
-              params: { id: question, question: { title: 'updated title', body: 'updated body' } },
+              params: {
+                id: question,
+                question: { title: 'updated title', body: 'updated body', files: [file] }
+              },
               format: :js
       end
 
@@ -99,6 +106,7 @@ RSpec.describe QuestionsController, type: :controller do
 
         expect(question.title).to eq('updated title')
         expect(question.body).to eq('updated body')
+        expect(question.files.first.filename).to eq('rails_helper.rb')
       end
 
       it 'renders update' do
@@ -130,7 +138,10 @@ RSpec.describe QuestionsController, type: :controller do
       before do
         login(user)
         patch :update,
-              params: { id: another_question, question: { title: 'updated title', body: 'updated body' } },
+              params: {
+                id: another_question,
+                question: { title: 'updated title', body: 'updated body', files: [file] }
+              },
               format: :js
       end
 
@@ -139,6 +150,7 @@ RSpec.describe QuestionsController, type: :controller do
 
         expect(another_question.title).to eq('MyQuestionTitle')
         expect(another_question.body).to eq('MyQuestionText')
+        expect(question.files).to be_empty
       end
 
       it 'gets 403 status' do
@@ -149,7 +161,10 @@ RSpec.describe QuestionsController, type: :controller do
     context 'when user is not authenticated' do
       before do
         patch :update,
-              params: { id: question, question: { title: 'updated title', body: 'updated body' } },
+              params: {
+                id: question,
+                question: { title: 'updated title', body: 'updated body', files: [file] }
+              },
               format: :js
       end
 
@@ -158,6 +173,7 @@ RSpec.describe QuestionsController, type: :controller do
 
         expect(question.title).to eq('MyQuestionTitle')
         expect(question.body).to eq('MyQuestionText')
+        expect(question.files).to be_empty
       end
 
       it 'gets 401 status' do
@@ -208,6 +224,82 @@ RSpec.describe QuestionsController, type: :controller do
         delete :destroy, params: { id: question }
 
         expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'DELETE#destroy_file' do
+    before do
+      question.files.attach(
+        io: File.open(Rails.root.join('spec/rails_helper.rb')),
+        filename: 'rails_helper.rb'
+      )
+
+      another_question.files.attach(
+        io: File.open(Rails.root.join('spec/rails_helper.rb')),
+        filename: 'rails_helper.rb'
+      )
+    end
+
+    context "when user is question's author" do
+      before do
+        login(user)
+      end
+
+      it 'deletes attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: question, file_id: question.files.first.id },
+                 format: :js
+        end.to change(question.files, :count).by(-1)
+      end
+
+      it 'renders destroy_file' do
+        delete :destroy_file,
+               params: { id: question, file_id: question.files.first.id },
+               format: :js
+
+        expect(response).to render_template :destroy_file
+      end
+    end
+
+    context "when user is not question's author" do
+      before do
+        login(user)
+      end
+
+      it 'does not delete attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: another_question, file_id: another_question.files.first.id },
+                 format: :js
+        end.not_to change(question.files, :count)
+      end
+
+      it 'gets 403 status' do
+        delete :destroy_file,
+               params: { id: another_question, file_id: another_question.files.first.id },
+               format: :js
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not delete attached file' do
+        expect do
+          delete :destroy_file,
+                 params: { id: question, file_id: question.files.first.id },
+                 format: :js
+        end.not_to change(question.files, :count)
+      end
+
+      it 'gets 401 status' do
+        delete :destroy_file,
+               params: { id: question, file_id: question.files.first.id },
+               format: :js
+
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
