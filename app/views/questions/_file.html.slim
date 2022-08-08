@@ -3,5 +3,5 @@ p id="question-file-#{file.id}"
 
   - if current_user == @question.user
     = link_to 'Delete',
-              destroy_file_question_url(file_id: file.id),
+              destroy_file_question_path(file_id: file.id),
               method: :delete, remote: true
