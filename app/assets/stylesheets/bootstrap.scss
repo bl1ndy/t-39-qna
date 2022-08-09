@@ -1,2 +1,6 @@
 @import 'bootstrap/scss/bootstrap';
 @import "bootstrap/scss/utilities/api";
+
+.dropdown-menu[data-bs-popper] {
+  margin: 0;
+}

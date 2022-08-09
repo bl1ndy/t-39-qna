@@ -14,7 +14,7 @@ feature 'User can create a question', %(
       sign_in(user)
 
       visit questions_path
-      click_on 'Ask a Question'
+      click_on 'Ask Question'
     end
 
     scenario 'creates a question' do
@@ -46,7 +46,7 @@ feature 'User can create a question', %(
 
   scenario 'Guest tries to create a question' do
     visit questions_path
-    click_on 'Ask a Question'
+    click_on 'Ask Question'
 
     expect(page).to have_content('You need to sign in or sign up before continuing.')
   end
