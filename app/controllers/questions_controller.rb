@@ -16,7 +16,9 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.build(question_params)
 
     if @question.save
-      redirect_to @question, notice: 'Your Question successfully created!'
+      flash[:success] = 'Your Question successfully created!'
+
+      redirect_to @question
     else
       render :new
     end
@@ -39,8 +41,9 @@ class QuestionsController < ApplicationController
   def destroy
     if current_user == @question.user
       @question.destroy
+      flash[:success] = 'Your Question successfully deleted!'
 
-      redirect_to questions_path, notice: 'Your Question successfully deleted!'
+      redirect_to questions_path
     else
       head :forbidden
     end

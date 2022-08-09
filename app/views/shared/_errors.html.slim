@@ -1,5 +1,5 @@
 - if object.present? && object.errors.any?
   div class="alert alert-danger"
-    ul
+    ul.mb-0
       - object.errors.full_messages.each do |message|
         li= message
