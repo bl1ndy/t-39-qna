@@ -27,7 +27,7 @@ div.question
         = f.text_area :body
 
         = f.label :files
-        = f.file_field :files, multiple: true
+        = f.file_field :files, multiple: true, direct_upload: true
 
         = f.submit 'Save'
 
@@ -51,6 +51,6 @@ div
       = f.text_area :body
 
       = f.label :files
-      = f.file_field :files, multiple: true
+      = f.file_field :files, multiple: true, direct_upload: true
 
       = f.submit 'Post Your Answer'
