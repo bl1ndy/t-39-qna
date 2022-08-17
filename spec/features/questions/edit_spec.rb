@@ -28,8 +28,8 @@ feature 'User can edit his question', %(
     scenario 'edits his question' do
       within '.question' do
         click_link 'Edit'
-        fill_in 'Title', with: 'edited title'
-        fill_in 'Text', with: 'edited text'
+        fill_in(id: 'question_title', with: 'edited title')
+        fill_in(id: 'question_body', with: 'edited text')
         click_button 'Save'
 
         expect(page).not_to have_content(question.title)
@@ -44,7 +44,7 @@ feature 'User can edit his question', %(
     scenario 'edits his question with attached files' do
       within '.question' do
         click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+        attach_file 'question_files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
         click_button 'Save'
 
         expect(page).to have_link('factory_bot.rb') # check that first attachment is not replaced by new files
@@ -55,7 +55,7 @@ feature 'User can edit his question', %(
 
     scenario 'deletes attached file' do
       within '.question-files' do
-        click_link 'Delete'
+        click_link(class: 'btn-close')
 
         expect(page).to have_no_link('factory_bot.rb')
       end
@@ -64,8 +64,8 @@ feature 'User can edit his question', %(
     scenario 'edits his question with errors' do
       within '.question' do
         click_link 'Edit'
-        fill_in 'Title', with: ''
-        fill_in 'Text', with: ''
+        fill_in(id: 'question_title', with: '')
+        fill_in(id: 'question_body', with: '')
         click_button 'Save'
 
         expect(page).to have_content("Title can't be blank")

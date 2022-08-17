@@ -11,6 +11,8 @@ class AnswersController < ApplicationController
   end
 
   def update
+    @best_answer = @question.best_answer
+
     if current_user == @answer.user
       @answer.update(answer_params)
     else

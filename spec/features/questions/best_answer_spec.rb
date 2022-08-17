@@ -21,7 +21,7 @@ feature 'User can mark preferred answer as the best for his question', %(
       within "#answer-#{answer.id}" do
         click_button 'Best'
 
-        expect(page).to have_content('Best answer:')
+        expect(page).to have_content('Best answer')
       end
     end
   end

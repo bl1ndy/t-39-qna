@@ -1,35 +1,42 @@
-li id="answer-#{answer.id}"
-  - if answer == @best_answer
-    span.best-label
-      'Best answer:
+div id="answer-#{answer.id}" class="card mb-3"
+  div class="card-header small text-muted"
+    => "Posted #{time_ago_in_words(answer.created_at)} ago by"
+    span.text-info
+      => answer.user.email
 
-  => answer.body
+    - if answer == @best_answer
+      span class="best-label badge bg-success rounded-pill"
+        | Best answer
 
-  div.answer-files
+  .card-body
+    div class="answer-body"
+      => answer.body
+
     - if answer.files.attached?
-      = render partial: 'answers/file', collection: answer.files, locals: { answer: }
+      div class="answer-files list-group mt-3"
+        = render partial: 'answers/file', collection: answer.files, locals: { answer: }
 
-  - if current_user == @question.user
-    = button_to 'Best',
-      best_answer_path(answer),
-      class: "best-answer-button #{'hidden' if answer == @best_answer}",
-      remote: true
-
-  - if current_user == answer.user
-    => link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    = link_to 'Delete Answer',
-              answer_path(answer),
-              method: :delete, data: { confirm: 'Are you sure?' }, remote: true
-
-    div
-      = form_with(model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" }, local: false) do |f|
+    div class="mt-3 hidden" id="edit-answer-#{answer.id}"
+      = form_with(model: answer, local: false) do |f|
         .edit-answer-errors
           = render 'shared/errors', object: f.object
+        .mb-3
+          = f.text_area :body, class: 'form-control'
+        .mb-3
+          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+        = f.submit 'Save', class: 'btn btn-sm btn-info'
 
-        = f.label :body, 'Text'
-        = f.text_area :body
+  div class="card-footer small text-muted"
+    - if current_user == answer.user
+      => link_to 'Edit', '#', class: 'edit-answer-link btn btn-sm btn-warning', data: { answer_id: answer.id }
+      => link_to 'Delete',
+                 answer_path(answer),
+                 method: :delete, data: { confirm: 'Are you sure?' }, remote: true,
+                 class: 'btn btn-sm btn-danger answer-delete-link'
 
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
-
-        = f.submit 'Save'
+    - if current_user == @question.user
+      = button_to 'Best',
+                  best_answer_path(answer),
+                  form: { class: 'd-inline-block' },
+                  class: "best-answer-button btn btn-sm btn-success #{'hidden' if answer == @best_answer}",
+                  remote: true

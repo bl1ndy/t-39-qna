@@ -1,56 +1,61 @@
-div.question
+.question
   h1.question-title
-    = @question.title
+    => @question.title
 
-  p.question-body
+  - if current_user == @question.user
+    .question-links
+      => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
+      = link_to 'Delete',
+                question_path(@question),
+                method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
+                class: 'btn btn-sm btn-danger'
+
+    div class="hidden edit-question-form mt-3"
+      = form_with(model: @question, local: false) do |f|
+        .question-errors
+          = render 'shared/errors', object: f.object
+        .mb-3
+          = f.text_field :title, class: 'form-control'
+        .mb-3
+          = f.text_area :body, class: 'form-control'
+        .mb-3
+          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+        = f.submit 'Save', class: 'btn btn-sm btn-info'
+
+  div class="mt-3 small text-muted"
+    => "Asked #{time_ago_in_words(@question.created_at)} ago by"
+    span.text-info
+      = @question.user.email
+
+  hr
+
+  div class="question-body mb-3"
     = @question.body
 
-  div.question-files
+  div class="question-files list-group"
     - if @question.files.attached?
       = render partial: 'file', collection: @question.files
 
-  - if current_user == @question.user
-    => link_to 'Edit', '#', class: 'edit-question-link'
-    = link_to 'Delete',
-              question_path(@question),
-              method: :delete, data: { turbo: false, confirm: 'Are you sure?' }
+h3.mt-3 Answers
 
-    div
-      = form_with(model: @question, class: 'hidden edit-question-form', local: false) do |f|
-        .question-errors
-          = render 'shared/errors', object: f.object
-
-        = f.label :title
-        = f.text_field :title
-
-        = f.label :body, 'Text'
-        = f.text_area :body
-
-        = f.label :files
-        = f.file_field :files, multiple: true, direct_upload: true
-
-        = f.submit 'Save'
-
-h2 Answers
-
-div
-  ul.answers
-    - if @best_answer
-      = render @best_answer
-    = render @answers
+div class="answers ms-lg-5 mt-3"
+  - if @best_answer
+    = render @best_answer
+  = render @answers
 
 - if user_signed_in?
-  h2 Your Answer
+  div class="card mt-5 mb-3"
+    .card-header
+      h3 Your Answer
 
-  div
-    = form_with(model: [@question, @answer], class: 'new-answer-form', local: false) do |f|
-      .new-answer-errors
-        = render 'shared/errors', object: f.object
-
-      = f.label :body, 'Text'
-      = f.text_area :body
-
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-
-      = f.submit 'Post Your Answer'
+    .card-body
+      = form_with(model: [@question, @answer], class: 'new-answer-form', local: false) do |f|
+        .new-answer-errors
+          = render 'shared/errors', object: f.object
+        .mb-3
+          = f.label :body, 'Text', class: 'form-label'
+          = f.text_area :body, size: 'x8', class: 'form-control'
+        .mb-3
+          = f.label :files, class: 'form-label'
+          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+        = f.submit 'Post Your Answer', class: 'btn btn-sm btn-info'

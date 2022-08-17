@@ -28,7 +28,7 @@ feature 'User can edit his answer', %(
     scenario 'edits his answer' do
       within '.answers' do
         click_link 'Edit'
-        fill_in 'Text', with: 'edited answer'
+        fill_in(id: 'answer_body', with: 'edited answer')
         click_button 'Save'
 
         expect(page).not_to have_content(answer.body)
@@ -40,7 +40,7 @@ feature 'User can edit his answer', %(
     scenario 'edits his answer with attached files' do
       within '.answers' do
         click_link 'Edit'
-        attach_file 'Files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
+        attach_file 'answer_files', [Rails.root.join('spec/rails_helper.rb'), Rails.root.join('spec/spec_helper.rb')]
         click_button 'Save'
 
         expect(page).to have_link('factory_bot.rb') # check that first attachment is not replaced by new files
@@ -51,7 +51,7 @@ feature 'User can edit his answer', %(
 
     scenario 'deletes attached file' do
       within "#answer-#{answer.id} .answer-files" do
-        click_link 'Delete'
+        click_link(class: 'btn-close')
 
         expect(page).to have_no_link('factory_bot.rb')
       end
@@ -61,7 +61,7 @@ feature 'User can edit his answer', %(
       click_link 'Edit'
 
       within '.answers' do
-        fill_in 'Text', with: ''
+        fill_in(id: 'answer_body', with: '')
         click_button 'Save'
 
         expect(page).to have_content("Body can't be blank")

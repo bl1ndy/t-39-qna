@@ -21,7 +21,7 @@ feature 'User can delete his answer', %(
 
     scenario 'delete his answer' do
       accept_confirm do
-        click_link 'Delete Answer'
+        click_link('Delete', class: 'answer-delete-link')
       end
 
       expect(page).to have_no_content(answer.body)
@@ -29,7 +29,7 @@ feature 'User can delete his answer', %(
 
     scenario 'does not see delete button on someone else answer' do
       within "#answer-#{another_answer.id}" do
-        expect(page).not_to have_link('Delete Answer')
+        expect(page).not_to have_link('Delete', class: 'answer-delete-link')
       end
     end
   end
@@ -39,7 +39,7 @@ feature 'User can delete his answer', %(
       visit question_path(question)
 
       within('.answers') do
-        expect(page).to have_no_link('Delete Answer')
+        expect(page).to have_no_link('Delete', class: 'answer-delete-link')
       end
     end
   end

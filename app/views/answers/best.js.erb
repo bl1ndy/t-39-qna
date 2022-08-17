@@ -3,7 +3,8 @@
   answerBestButton = $('#answer-' + <%= @answer.id %> + ' .best-answer-button')
 
   $('.best-label').remove()
-  $("<span class='best-label'>Best answer: </span>").prependTo(answer)
+  $('<span class="best-label badge bg-success rounded-pill">Best answer</span>')
+    .appendTo($('#answer-' + <%= @answer.id %> + ' .card-header'))
   $('.best-answer-button').removeClass('hidden')
   answerBestButton.addClass('hidden')
   answer.prependTo('.answers')

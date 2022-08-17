@@ -3,6 +3,6 @@ $(document).on('turbolinks:load', function() {
     e.preventDefault()
     $(this).hide()
     let answerId = $(this).data('answerId')
-    $('form#edit-answer-' + answerId).removeClass('hidden')
+    $('div#edit-answer-' + answerId).removeClass('hidden')
   })
 })
