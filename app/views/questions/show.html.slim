@@ -3,7 +3,7 @@
     => @question.title
 
   - if current_user == @question.user
-    .question-links
+    .question-control
       => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
       = link_to 'Delete',
                 question_path(@question),
@@ -32,9 +32,28 @@
   div class="question-body mb-3"
     = @question.body
 
-  div class="question-files list-group"
+  hr
+
+  .row
     - if @question.files.attached?
-      = render partial: 'file', collection: @question.files
+      div class="col mb-3"
+        .card
+          .card-header
+            label.small Files
+
+          div class="question-files card-body"
+            = render partial: 'file', collection: @question.files
+
+    - if @question.links.any?
+      .col
+        .card
+          .card-header
+            label.small Links
+
+          div class="question-links card-body"
+            - @question.links.each do |link|
+              .small
+                = link_to link.title, link.url
 
 h3.mt-3 Answers
 

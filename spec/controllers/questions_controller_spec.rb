@@ -25,11 +25,23 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    it 'renders new view' do
-      login(user)
-      get :new
+    context 'when user is authenticated' do
+      before do
+        login(user)
+        get :new
+      end
 
-      expect(response).to render_template :new
+      it 'assigns a new Question to @question' do
+        expect(assigns(:question)).to be_a_new(Question)
+      end
+
+      it 'assigns a new Link to @question.links.build' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
+
+      it 'renders new view' do
+        expect(response).to render_template :new
+      end
     end
 
     context 'when user is not authenticated' do

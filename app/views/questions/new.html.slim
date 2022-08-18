@@ -17,4 +17,14 @@ div
       = f.label :files, class: 'form-label'
       = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
 
+    div.mb-3
+      label.form-label Links
+
+      = f.fields_for :links do |link_f|
+        div.row
+          div.col
+            = link_f.text_field :title, placeholder: 'title', class: 'form-control form-control-sm'
+          div.col
+            = link_f.text_field :url, placeholder: 'url', class: 'form-control form-control-sm'
+
     = f.submit 'Create', class: 'btn btn-primary'

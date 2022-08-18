@@ -1,4 +1,4 @@
-div id="question-file-#{file.id}" class="list-group-item small"
+div id="question-file-#{file.id}" class="small"
   => link_to file.filename.to_s, url_for(file), class: 'text-decoration-none'
 
   - if current_user == @question.user
