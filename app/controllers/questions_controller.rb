@@ -29,6 +29,7 @@ class QuestionsController < ApplicationController
     @best_answer = @question.best_answer
     @answers = @question.answers.with_attached_files.where.not(id: @best_answer&.id)
     @answer = @question.answers.build
+    @answer.links.build
   end
 
   def update

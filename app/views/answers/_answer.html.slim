@@ -9,12 +9,20 @@ div id="answer-#{answer.id}" class="card mb-3"
         | Best answer
 
   .card-body
-    div class="answer-body"
+    .answer-body
       => answer.body
 
     - if answer.files.attached?
-      div class="answer-files list-group mt-3"
+      div class="answer-files mt-3"
+        label.small Files
         = render partial: 'answers/file', collection: answer.files, locals: { answer: }
+
+    - if answer.links.any?
+      div class="answer-links mt-3"
+        label.small Links
+        - answer.links.each do |link|
+          .small
+            = link_to link.title, link.url
 
     div class="mt-3 hidden" id="edit-answer-#{answer.id}"
       = form_with(model: answer, local: false) do |f|
