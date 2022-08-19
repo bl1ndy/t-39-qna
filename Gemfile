@@ -7,6 +7,7 @@ ruby '3.1.2'
 
 gem 'aws-sdk-s3', '~> 1.114', require: false
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'cocoon', '~> 1.2', '>= 1.2.15'
 gem 'devise', '~> 4.8', '>= 4.8.1'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.5'

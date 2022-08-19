@@ -13,6 +13,7 @@ import "bootstrap/js/dist/dropdown"
 import "bootstrap/js/dist/collapse"
 import "./answer"
 import "./question"
+import '@nathanvda/cocoon'
 
 Rails.start()
 Turbolinks.start()
