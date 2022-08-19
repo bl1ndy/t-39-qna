@@ -63,18 +63,4 @@ div class="answers ms-lg-5 mt-3"
   = render @answers
 
 - if user_signed_in?
-  div class="card mt-5 mb-3"
-    .card-header
-      h3 Your Answer
-
-    .card-body
-      = form_with(model: [@question, @answer], class: 'new-answer-form', local: false) do |f|
-        .new-answer-errors
-          = render 'shared/errors', object: f.object
-        .mb-3
-          = f.label :body, 'Text', class: 'form-label'
-          = f.text_area :body, size: 'x8', class: 'form-control'
-        .mb-3
-          = f.label :files, class: 'form-label'
-          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
-        = f.submit 'Post Your Answer', class: 'btn btn-sm btn-info'
+  = render 'new_answer'

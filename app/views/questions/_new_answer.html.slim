@@ -1,0 +1,29 @@
+div class="card mt-5 mb-3"
+  .card-header
+    h3 Your Answer
+
+  .card-body
+    = form_with(model: [@question, @answer], class: 'new-answer-form', local: false) do |f|
+      .new-answer-errors
+        = render 'shared/errors', object: f.object
+
+      .mb-3
+        = f.label :body, 'Text', class: 'form-label'
+        = f.text_area :body, size: 'x8', class: 'form-control'
+
+      .mb-3
+        = f.label :files, class: 'form-label'
+        = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+
+      .mb-3
+        label.form-label Links
+
+        = f.fields_for :links do |link_f|
+          .row
+            .col
+              = link_f.text_field :title, placeholder: 'title', class: 'form-control form-control-sm'
+
+            .col
+              = link_f.text_field :url, placeholder: 'url', class: 'form-control form-control-sm'
+
+      = f.submit 'Post Your Answer', class: 'btn btn-sm btn-info'
