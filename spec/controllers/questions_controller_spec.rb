@@ -6,20 +6,45 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:another_user) { create(:user) }
   let!(:question) { create(:question, user:) }
+  let(:answers) { create_list(:answer, 2, question:, user:) }
   let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
 
   describe 'GET #index' do
-    it 'renders index view' do
-      get :index
+    before { get :index }
 
+    it 'assigns @questions' do
+      expect(assigns(:questions)).to eq([question])
+    end
+
+    it 'renders index view' do
       expect(response).to render_template :index
     end
   end
 
   describe 'GET #show' do
-    before { get :show, params: { id: question } }
+    before do
+      question.mark_as_best(answers.first)
 
-    it 'assigns a new Link to @answer.links.build' do
+      get :show, params: { id: question }
+    end
+
+    it 'assigns requested question to @question' do
+      expect(assigns(:question)).to eq(question)
+    end
+
+    it 'assigns @answers' do
+      expect(assigns(:answers)).to eq([answers.last])
+    end
+
+    it 'assigns question best answer to @best_answer' do
+      expect(assigns(:best_answer)).to eq(question.best_answer)
+    end
+
+    it 'assigns a new Answer to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'assigns a new Link for new answer' do
       expect(assigns(:answer).links.first).to be_a_new(Link)
     end
 
@@ -39,7 +64,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect(assigns(:question)).to be_a_new(Question)
       end
 
-      it 'assigns a new Link to @question.links.build' do
+      it 'assigns a new Link for question' do
         expect(assigns(:question).links.first).to be_a_new(Link)
       end
 
