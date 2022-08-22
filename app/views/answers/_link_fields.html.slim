@@ -1,0 +1,8 @@
+div class="row nested-fields"
+  div.col
+    = f.text_field :title, placeholder: 'title', class: 'form-control form-control-sm'
+
+  div.col
+    = f.text_field :url, placeholder: 'url', class: 'form-control form-control-sm'
+
+  = link_to_remove_association "Remove link", f

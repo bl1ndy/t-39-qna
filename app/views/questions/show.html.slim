@@ -63,4 +63,5 @@ div class="answers ms-lg-5 mt-3"
   = render @answers
 
 - if user_signed_in?
-  = render 'new_answer'
+  .new-answer
+    = render 'new_answer', answer: @answer

@@ -32,6 +32,17 @@ feature 'User can create an answer on the question page', %(
       expect(page).to have_link('spec_helper.rb')
     end
 
+    scenario 'sees empty form after submitting' do
+      fill_in 'Text', with: 'Test Answer text'
+      attach_file 'Files', [Rails.root.join('spec/rails_helper.rb')]
+      click_button 'Post Your Answer'
+
+      within '.new-answer' do
+        expect(page).to have_no_content('Test Answer text')
+        expect(page).to have_no_content('rails_helper.rb')
+      end
+    end
+
     scenario 'creates an answer with errors' do
       click_button 'Post Your Answer'
 

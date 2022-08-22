@@ -2,5 +2,5 @@ $('.new-answer-errors').html('<%= render 'shared/errors', object: @answer %>')
 
 <% if @answer.persisted? %>
   $('.answers').append('<%= j render @answer %>')
-  $('.new-answer-form #answer_body').val('')
+  $('.new-answer').html('<%= j render 'questions/new_answer', answer: @new_answer %>')
 <% end %>

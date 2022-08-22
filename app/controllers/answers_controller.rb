@@ -8,6 +8,8 @@ class AnswersController < ApplicationController
   def create
     @question = Question.find(params[:question_id])
     @answer = @question.answers.create(answer_params.merge(user: current_user))
+    @new_answer = @question.answers.build
+    @new_answer.links.build
   end
 
   def update
