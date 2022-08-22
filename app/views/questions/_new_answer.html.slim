@@ -18,12 +18,10 @@ div class="card mt-5 mb-3"
       .mb-3
         label.form-label Links
 
-        = f.fields_for :links do |link_f|
-          .row
-            .col
-              = link_f.text_field :title, placeholder: 'title', class: 'form-control form-control-sm'
-
-            .col
-              = link_f.text_field :url, placeholder: 'url', class: 'form-control form-control-sm'
+        #links
+          = f.fields_for :links do |link_f|
+            = render 'link_fields', f: link_f
+          .links
+            = link_to_add_association 'Add link', f, :links
 
       = f.submit 'Post Your Answer', class: 'btn btn-sm btn-info'
