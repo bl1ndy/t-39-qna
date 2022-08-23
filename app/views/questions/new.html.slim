@@ -20,7 +20,7 @@ div
     div.mb-3
       label.form-label Links
 
-      #links
+      #question-links
         = f.fields_for :links do |link_f|
           = render 'link_fields', f: link_f
         .links

@@ -21,14 +21,14 @@ feature 'User can add links to answer', %(
   scenario 'User add links when creates answer' do
     fill_in 'Text', with: 'Test answer body'
 
-    within '#links' do
+    within '#answer-links' do
       fill_in(placeholder: 'title', with: 'My gist')
       fill_in(placeholder: 'url', with: gist_url)
     end
 
     click_link 'Add link'
 
-    within '#links .nested-fields:nth-child(2)' do
+    within(:xpath, "//div[@id='answer-links']/div[contains(@class, 'nested-fields')][2]") do
       fill_in(placeholder: 'title', with: 'Another link')
       fill_in(placeholder: 'url', with: another_url)
     end

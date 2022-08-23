@@ -18,7 +18,7 @@ div class="card mt-5 mb-3"
       .mb-3
         label.form-label Links
 
-        #links
+        #answer-links
           = f.fields_for :links do |link_f|
             = render 'answers/link_fields', f: link_f
           .links

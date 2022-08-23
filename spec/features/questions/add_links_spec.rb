@@ -21,14 +21,14 @@ feature 'User can add links to question', %(
     fill_in 'Title', with: 'Test question title'
     fill_in 'Text', with: 'Test question body'
 
-    within '#links' do
+    within '#question-links' do
       fill_in(placeholder: 'title', with: 'My gist')
       fill_in(placeholder: 'url', with: gist_url)
     end
 
     click_link 'Add link'
 
-    within '#links .nested-fields:nth-child(2)' do
+    within(:xpath, "//div[@id='question-links']/div[contains(@class, 'nested-fields')][2]") do
       fill_in(placeholder: 'title', with: 'Another link')
       fill_in(placeholder: 'url', with: another_url)
     end
