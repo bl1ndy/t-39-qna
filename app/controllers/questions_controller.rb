@@ -2,7 +2,7 @@
 
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show update destroy destroy_file]
+  before_action :set_question, only: %i[show update destroy destroy_file destroy_link]
 
   def index
     @questions = Question.all
@@ -56,6 +56,16 @@ class QuestionsController < ApplicationController
 
     if current_user == @question.user
       @file.purge
+    else
+      head :forbidden
+    end
+  end
+
+  def destroy_link
+    @link = Link.find(params[:link_id])
+
+    if current_user == @question.user
+      @link.destroy
     else
       head :forbidden
     end

@@ -4,7 +4,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :questions do
-    member { delete :destroy_file }
+    member do
+      delete :destroy_file
+      delete :destroy_link
+    end
 
     resources :answers, shallow: true, only: %i[create update destroy] do
       member do

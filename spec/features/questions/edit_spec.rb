@@ -16,6 +16,8 @@ feature 'User can edit his question', %(
       io: File.open(Rails.root.join('spec/support/factory_bot.rb')),
       filename: 'factory_bot.rb'
     )
+
+    question.links.create(title: 'test link', url: 'http://example.com')
   end
 
   describe 'Authenticated user' do
@@ -61,6 +63,14 @@ feature 'User can edit his question', %(
       end
     end
 
+    scenario 'deletes link' do
+      within '.question-links' do
+        click_link(class: 'btn-close')
+
+        expect(page).to have_no_link('test link')
+      end
+    end
+
     scenario 'edits his question with errors' do
       within '.question' do
         click_link 'Edit'
@@ -88,7 +98,13 @@ feature 'User can edit his question', %(
 
     scenario 'does not see delete link on files in someone else question' do
       within '.question-files' do
-        expect(page).not_to have_link('Delete')
+        expect(page).not_to have_link(class: 'btn-close')
+      end
+    end
+
+    scenario 'does not see delete link on links in someone else question' do
+      within '.question-links' do
+        expect(page).not_to have_link(class: 'btn-close')
       end
     end
   end
@@ -104,7 +120,13 @@ feature 'User can edit his question', %(
 
     scenario 'does not see delete link on files in question' do
       within '.question-files' do
-        expect(page).not_to have_link('Delete')
+        expect(page).not_to have_link(class: 'btn-close')
+      end
+    end
+
+    scenario 'does not see delete link on links in question' do
+      within '.question-links' do
+        expect(page).not_to have_link(class: 'btn-close')
       end
     end
   end

@@ -334,4 +334,68 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE#destroy_link' do
+    before do
+      question.links.create(title: 'test link', url: 'http://example.com')
+    end
+
+    context "when user is question's author" do
+      before { login(user) }
+
+      it 'deletes link' do
+        expect do
+          delete :destroy_link,
+                 params: { id: question, link_id: question.links.first.id },
+                 format: :js
+        end.to change(question.links, :count).by(-1)
+      end
+
+      it 'renders destroy_link' do
+        delete :destroy_link,
+               params: { id: question, link_id: question.links.first.id },
+               format: :js
+
+        expect(response).to render_template :destroy_link
+      end
+    end
+
+    context "when user is not question's author" do
+      before { login(another_user) }
+
+      it 'does not delete link' do
+        expect do
+          delete :destroy_link,
+                 params: { id: question, link_id: question.links.first.id },
+                 format: :js
+        end.not_to change(question.links, :count)
+      end
+
+      it 'gets 403 status' do
+        delete :destroy_link,
+               params: { id: question, link_id: question.links.first.id },
+               format: :js
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not delete link' do
+        expect do
+          delete :destroy_link,
+                 params: { id: question, link_id: question.links.first.id },
+                 format: :js
+        end.not_to change(question.links, :count)
+      end
+
+      it 'gets 401 status' do
+        delete :destroy_link,
+               params: { id: question, link_id: question.links.first.id },
+               format: :js
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
 end

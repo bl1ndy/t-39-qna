@@ -51,9 +51,7 @@
             label.small Links
 
           div class="question-links card-body"
-            - @question.links.each do |link|
-              .small
-                = link_to link.title, link.url
+            = render partial: 'link', collection: @question.links
 
 h3.mt-3 Answers
 
