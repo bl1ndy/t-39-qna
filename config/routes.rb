@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       member do
         post :best
         delete :destroy_file
+        delete :destroy_link
       end
     end
   end

@@ -2,7 +2,7 @@
 
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_answer, only: %i[update destroy best destroy_file]
+  before_action :set_answer, only: %i[update destroy best destroy_file destroy_link]
   before_action :set_question, only: %i[update destroy best]
 
   def create
@@ -43,6 +43,16 @@ class AnswersController < ApplicationController
 
     if current_user == @answer.user
       @file.purge
+    else
+      head :forbidden
+    end
+  end
+
+  def destroy_link
+    @link = Link.find(params[:link_id])
+
+    if current_user == @answer.user
+      @link.destroy
     else
       head :forbidden
     end

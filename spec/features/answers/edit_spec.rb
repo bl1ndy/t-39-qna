@@ -17,6 +17,8 @@ feature 'User can edit his answer', %(
       io: File.open(Rails.root.join('spec/support/factory_bot.rb')),
       filename: 'factory_bot.rb'
     )
+
+    answer.links.create(title: 'test link', url: 'http://example.com')
   end
 
   describe 'Authenticated user' do
@@ -57,6 +59,14 @@ feature 'User can edit his answer', %(
       end
     end
 
+    scenario 'deletes link' do
+      within "#answer-#{answer.id} .answer-links" do
+        click_link(class: 'btn-close')
+
+        expect(page).to have_no_link('test link')
+      end
+    end
+
     scenario 'edits his answer with errors' do
       click_link 'Edit'
 
@@ -83,7 +93,13 @@ feature 'User can edit his answer', %(
 
     scenario 'does not see delete link on files in answer' do
       within "#answer-#{answer.id} .answer-files" do
-        expect(page).not_to have_link('Delete')
+        expect(page).not_to have_link(class: 'btn-close')
+      end
+    end
+
+    scenario 'does not see delete link on links in answer' do
+      within "#answer-#{answer.id} .answer-links" do
+        expect(page).not_to have_link(class: 'btn-close')
       end
     end
   end
@@ -99,7 +115,13 @@ feature 'User can edit his answer', %(
 
     scenario 'does not see delete link on files in answer' do
       within "#answer-#{answer.id} .answer-files" do
-        expect(page).not_to have_link('Delete')
+        expect(page).not_to have_link(class: 'btn-close')
+      end
+    end
+
+    scenario 'does not see delete link on links in answer' do
+      within "#answer-#{answer.id} .answer-links" do
+        expect(page).not_to have_link(class: 'btn-close')
       end
     end
   end

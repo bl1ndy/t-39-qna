@@ -1,0 +1,9 @@
+div id="answer-link-#{link.id}" class="small"
+  => link_to link.title, link.url, class: 'text-decoration-none'
+
+  - if current_user == answer.user
+    span class="badge bg-danger rounded-pill"
+      = link_to '',
+              destroy_link_answer_path(answer, link_id: link.id),
+              method: :delete, remote: true,
+              class: 'btn-close btn-close-white'
