@@ -1,1 +1,7 @@
 $('#question-file-' + <%= @file.id %>).remove()
+
+<% @question.reload %>
+
+<% unless @question.files.attached? %>
+  $('.question-files-card').addClass('hidden')
+<% end %>

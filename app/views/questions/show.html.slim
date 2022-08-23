@@ -35,23 +35,21 @@
   hr
 
   .row
-    - if @question.files.attached?
-      div class="col mb-3"
-        .card
-          .card-header
-            label.small Files
+    div class="col mb-3 question-files-card #{'hidden' unless @question.files.attached?}"
+      .card
+        .card-header
+          label.small Files
 
-          div class="question-files card-body"
-            = render partial: 'file', collection: @question.files
+        div class="question-files card-body"
+          = render partial: 'file', collection: @question.files
 
-    - if @question.links.any?
-      .col
-        .card
-          .card-header
-            label.small Links
+    div class="col question-links-card #{'hidden' if @question.links.empty?}"
+      .card
+        .card-header
+          label.small Links
 
-          div class="question-links card-body"
-            = render partial: 'link', collection: @question.links
+        div class="question-links card-body"
+          = render partial: 'link', collection: @question.links
 
 h3.mt-3 Answers
 

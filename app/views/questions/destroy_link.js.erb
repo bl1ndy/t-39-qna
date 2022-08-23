@@ -1,1 +1,5 @@
 $('#question-link-' + <%= @link.id %>).remove()
+
+<% if @question.links.empty? %>
+  $('.question-links-card').addClass('hidden')
+<% end %>
