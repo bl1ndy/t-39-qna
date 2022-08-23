@@ -4,7 +4,15 @@ $('.question-errors').html('<%= render 'shared/errors', object: @question %>')
   $('.question-title').html('<%= @question.title %>')
   $('.question-body').html('<%= @question.body %>')
 
-  $('.question-files').html('<%= j render partial: 'file', collection: @question.files %>')
+  <% if @question.files.attached? %>
+    $('.question-files-card').removeClass('hidden')
+    $('.question-files').html('<%= j render partial: 'file', collection: @question.files %>')
+  <% end %>
+
+  <% if @question.links.any? %>
+    $('.question-links-card').removeClass('hidden')
+    $('.question-links').html('<%= j render partial: 'link', collection: @question.links %>')
+  <% end %>
 
   $('.edit-question-form').addClass('hidden')
   $('.edit-question-link').show()

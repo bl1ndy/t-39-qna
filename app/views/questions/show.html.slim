@@ -20,6 +20,12 @@
           = f.text_area :body, class: 'form-control'
         .mb-3
           = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+        .mb-3
+          #question-links
+            = f.fields_for :links do |link_f|
+              = render 'link_fields', f: link_f
+            .links
+              = link_to_add_association 'Add link', f, :links
         = f.submit 'Save', class: 'btn btn-sm btn-info'
 
   div class="mt-3 small text-muted"
