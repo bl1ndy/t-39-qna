@@ -14,6 +14,6 @@ $('.question-errors').html('<%= render 'shared/errors', object: @question %>')
     $('.question-links').html('<%= j render partial: 'link', collection: @question.links %>')
   <% end %>
 
-  $('.edit-question-form').addClass('hidden')
+  $('.edit-question-form').html('<%= j render 'edit_form' %>').addClass('hidden')
   $('.edit-question-link').show()
 <% end %>
