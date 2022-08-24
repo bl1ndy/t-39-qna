@@ -51,6 +51,25 @@ feature 'User can edit his answer', %(
       end
     end
 
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'edits his answer with links' do
+      within "#answer-#{answer.id}" do
+        click_link 'Edit'
+        click_link 'Add link'
+
+        within(:xpath, "//div[@id='answer-links']/div[contains(@class, 'nested-fields')][2]") do
+          fill_in(placeholder: 'title', with: 'test link 2')
+          fill_in(placeholder: 'url', with: 'http://example2.com')
+        end
+
+        click_button 'Save'
+
+        expect(page).to have_link('test link', href: 'http://example.com')
+        expect(page).to have_link('test link 2', href: 'http://example2.com')
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
+
     scenario 'deletes attached file' do
       within "#answer-#{answer.id} .answer-files" do
         click_link(class: 'btn-close')

@@ -23,14 +23,7 @@ div id="answer-#{answer.id}" class="card mb-3"
         = render partial: 'answers/link', collection: answer.links, locals: { answer: }
 
     div class="mt-3 hidden" id="edit-answer-#{answer.id}"
-      = form_with(model: answer, local: false) do |f|
-        .edit-answer-errors
-          = render 'shared/errors', object: f.object
-        .mb-3
-          = f.text_area :body, class: 'form-control'
-        .mb-3
-          = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
-        = f.submit 'Save', class: 'btn btn-sm btn-info'
+      = render 'answers/edit_form', answer: answer
 
   div class="card-footer small text-muted"
     - if current_user == answer.user

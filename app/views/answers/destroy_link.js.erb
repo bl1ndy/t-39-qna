@@ -1,1 +1,7 @@
 $('#answer-link-' + <%= @link.id %>).remove()
+
+<% if @answer.links.empty? %>
+  $('#answer-' + <%= @answer.id %> + ' .answer-links').addClass('hidden')
+<% end %>
+
+$('#edit-answer-' + <%= @answer.id %>).html('<%= j render 'answers/edit_form', answer: @answer %>')

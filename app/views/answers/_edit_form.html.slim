@@ -1,0 +1,19 @@
+= form_with(model: answer, local: false) do |f|
+  .edit-answer-errors
+    = render 'shared/errors', object: f.object
+
+  .mb-3
+    = f.text_area :body, class: 'form-control'
+
+  .mb-3
+    = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+
+  .mb-3
+    #answer-links
+      = f.fields_for :links do |link_f|
+        = render 'link_fields', f: link_f
+
+      .links
+        = link_to_add_association 'Add link', f, :links
+
+  = f.submit 'Save', class: 'btn btn-sm btn-info'

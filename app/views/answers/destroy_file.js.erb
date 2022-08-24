@@ -1,1 +1,5 @@
 $('#answer-file-' + <%= @file.id %>).remove()
+
+<% unless @answer.files.attached? %>
+  $('#answer-' + <%= @answer.id %> + ' .answer-files').addClass('hidden')
+<% end %>
