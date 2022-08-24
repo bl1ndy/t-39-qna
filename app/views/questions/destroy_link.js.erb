@@ -3,3 +3,5 @@ $('#question-link-' + <%= @link.id %>).remove()
 <% if @question.links.empty? %>
   $('.question-links-card').addClass('hidden')
 <% end %>
+
+$('.edit-question-form').html('<%= j render 'edit_form' %>')
