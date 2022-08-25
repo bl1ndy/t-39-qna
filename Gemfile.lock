@@ -257,6 +257,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selenium-devtools (0.104.0)
+      selenium-webdriver (~> 4.2)
     selenium-webdriver (4.3.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -341,6 +343,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.14, >= 2.14.2)
   rubocop-rspec (~> 2.12, >= 2.12.1)
   sass-rails (>= 6)
+  selenium-devtools (~> 0.104.0)
   selenium-webdriver (>= 4.0.0.rc1)
   shoulda-matchers (~> 5.1)
   slim-rails (~> 3.5, >= 3.5.1)
