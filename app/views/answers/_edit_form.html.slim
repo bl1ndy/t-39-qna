@@ -1,4 +1,4 @@
-= form_with(model: answer, local: false) do |f|
+= form_with(model: answer, local: false, data: { answer_id: answer.id }) do |f|
   .edit-answer-errors
     = render 'shared/errors', object: f.object
 

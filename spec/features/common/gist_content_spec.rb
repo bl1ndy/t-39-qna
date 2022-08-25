@@ -26,6 +26,8 @@ feature 'User can see gist content', %(
         fill_in(placeholder: 'url', with: gist_url)
       end
 
+      click_button('Save')
+
       expect(page).to have_content('Hello, World!')
     end
   end
