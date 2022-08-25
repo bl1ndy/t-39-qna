@@ -4,27 +4,29 @@ $(document).on('turbolinks:load', function() {
   $('.edit-question-form').on('submit', getUpdatedQuestionGists)
 
   $('*[id*=edit-answer-]').on('submit', getUpdatedAnswerGists)
+
+  $('.new-answer').on('submit', getNewAnswerGists)
 })
 
 const getAllGists = function() {
   const gistLinks = $('.gist-link')
 
-  gistLinks.each(function() {
-    const linkId = $(this).data('linkId')
-
-    getContent(this, linkId)
-  })
+  getContent(gistLinks)
 }
 
 const getUpdatedQuestionGists = function() {
   setTimeout(function() {
     const gistLinks = $('.question .gist-link')
 
-    gistLinks.each(function() {
-      const linkId = $(this).data('linkId')
+    getContent(gistLinks)
+  }, 500)
+}
 
-      getContent(this, linkId)
-    })
+const getNewAnswerGists = function() {
+  setTimeout(function() {
+    const gistLinks = $(`.answers .card:last-child .gist-link`)
+
+    getContent(gistLinks)
   }, 500)
 }
 
@@ -33,26 +35,31 @@ const getUpdatedAnswerGists = function(e) {
     const answerId = $(e.target).data('answerId')
     const gistLinks = $(`#answer-${answerId} .gist-link`)
 
-    gistLinks.each(function() {
-      const linkId = $(this).data('linkId')
-
-      getContent(this, linkId)
-    })
+    getContent(gistLinks)
   }, 500)
 }
 
-const getContent = function(gist, linkId) {
-  const gistId = $(gist).attr('href').split('/').pop()
+const getContent = function(gistLinks) {
+  gistLinks.each(function() {
+    const linkId = $(this).data('linkId')
+    const gistId = $(this).attr('href').split('/').pop()
 
-  $.get('https://api.github.com/gists/' + gistId).done((data) => { formatContent(data.files, linkId) } )
+    $.get('https://api.github.com/gists/' + gistId)
+      .done((data) => { formatContent(data.files, linkId) })
+      .fail(function() { formatContent(false, linkId) })
+  })
 }
 
 const formatContent = function(files, linkId) {
   const gistContent = $(`.gist-link[data-link-id="${linkId}"] ~ .gist-content`)
+  gistContent.html('')
+  gistContent.removeClass('hidden')
 
-  $.each(files, (key, value) => {
-    gistContent.removeClass('hidden')
-    gistContent.html('')
-    gistContent.append(key).append(value.content)
-  })
+  if (files) {
+    $.each(files, (key, value) => {
+      gistContent.append(key + '\n').append(value.content + '\n')
+    })
+  } else {
+    gistContent.append('Gist not found')
+  }
 }
