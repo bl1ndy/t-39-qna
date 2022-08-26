@@ -17,4 +17,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resource :achievements, only: %i[show]
 end

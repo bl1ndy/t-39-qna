@@ -33,6 +33,7 @@ class AnswersController < ApplicationController
   def best
     if current_user == @question.user
       @question.mark_as_best(@answer)
+      @question.reward&.update(user: @answer.user)
     else
       head :forbidden
     end

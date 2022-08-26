@@ -1,0 +1,16 @@
+h1.mb-4 Achievements
+
+div class="table-responsive mt-4"
+  table class="table mt-3"
+    tbody
+      - current_user.rewards.each do |reward|
+        tr.align-middle
+          td
+            div
+              = image_tag reward.image_url, size: '50', alt: reward.title
+
+          td
+            = reward.title
+
+          td
+            = link_to reward.question.title, reward.question, class: 'text-decoration-none'
