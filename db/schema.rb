@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_18_112622) do
+ActiveRecord::Schema.define(version: 2022_08_26_084345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,17 @@ ActiveRecord::Schema.define(version: 2022_08_18_112622) do
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "image_url", null: false
+    t.bigint "question_id", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_rewards_on_question_id"
+    t.index ["user_id"], name: "index_rewards_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -92,4 +103,6 @@ ActiveRecord::Schema.define(version: 2022_08_18_112622) do
   add_foreign_key "answers", "users"
   add_foreign_key "questions", "answers", column: "best_answer_id", on_delete: :nullify
   add_foreign_key "questions", "users"
+  add_foreign_key "rewards", "questions"
+  add_foreign_key "rewards", "users"
 end

@@ -18,6 +18,10 @@
     span.text-info
       = @question.user.email
 
+    div
+      - if @question.reward
+        | Author offers a Reward for Best Answer!
+
   hr
 
   div class="question-body mb-3"

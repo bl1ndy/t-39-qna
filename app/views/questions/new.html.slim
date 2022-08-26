@@ -5,19 +5,19 @@ div
   = form_with(model: @question, local: true) do |f|
     = render 'shared/errors', object: f.object
 
-    div.mb-3
+    .mb-3
       = f.label :title, class: 'form-label'
       = f.text_field :title, class: 'form-control'
 
-    div.mb-3
+    .mb-3
       = f.label :body, 'Text', class: 'form-label'
       = f.text_area :body, class: 'form-control'
 
-    div.mb-3
+    .mb-3
       = f.label :files, class: 'form-label'
       = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
 
-    div.mb-3
+    .mb-3
       label.form-label Links
 
       #question-links
@@ -25,5 +25,16 @@ div
           = render 'link_fields', f: link_f
         .links
           = link_to_add_association 'Add link', f, :links
+
+    .mb-3
+      label.form-label Reward
+
+      div id="question-reward" class="row"
+        = f.fields_for :reward do |reward_f|
+          div.col
+            = reward_f.text_field :title, placeholder: 'title', class: 'form-control form-control-sm'
+
+          div.col
+            = reward_f.text_field :image_url, placeholder: 'image url', class: 'form-control form-control-sm'
 
     = f.submit 'Create', class: 'btn btn-primary'
