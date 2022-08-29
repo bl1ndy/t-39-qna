@@ -11,10 +11,12 @@ import "jquery"
 import '@popperjs/core'
 import "bootstrap/js/dist/dropdown"
 import "bootstrap/js/dist/collapse"
+import "bootstrap/js/dist/toast"
 import '@nathanvda/cocoon'
 import "./answer"
 import "./question"
 import '../utilities/gist_content'
+import '../utilities/vote'
 
 Rails.start()
 Turbolinks.start()

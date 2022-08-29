@@ -3,5 +3,13 @@
 }
 
 .gist-content {
-  white-space: pre;
+  white-space: pre-line;
+}
+
+.upvoted {
+  filter: invert(33%) sepia(78%) saturate(499%) hue-rotate(57deg) brightness(95%) contrast(84%);
+}
+
+.downvoted {
+  filter: invert(20%) sepia(43%) saturate(6092%) hue-rotate(351deg) brightness(77%) contrast(123%);
 }
