@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   resources :questions do
     member do
+      post :vote_up
+      post :vote_down
       delete :destroy_file
       delete :destroy_link
     end

@@ -2,6 +2,7 @@
 
 class Question < ApplicationRecord
   include Linkable
+  include Votable
 
   belongs_to :user
   belongs_to :best_answer, class_name: 'Answer', optional: true
@@ -17,5 +18,9 @@ class Question < ApplicationRecord
 
   def mark_as_best(answer)
     update(best_answer: answer)
+  end
+
+  def rating
+    votes.sum(:rate)
   end
 end
