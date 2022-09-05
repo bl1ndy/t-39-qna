@@ -20,7 +20,7 @@ feature 'User can see gist content', %(
 
     scenario 'User sees gist content on question link' do
       within '.question' do
-        expect(page).to have_content('mocked test gist')
+        expect(page).to have_content('Hello, World!')
       end
     end
   end
@@ -43,7 +43,7 @@ feature 'User can see gist content', %(
 
         click_button('Save')
 
-        expect(page).to have_content('mocked test gist')
+        expect(page).to have_content('Hello, World!')
       end
     end
 
@@ -57,7 +57,7 @@ feature 'User can see gist content', %(
       end
 
       within '.answers' do
-        expect(page).to have_content('mocked test gist')
+        expect(page).to have_content('Hello, World!')
       end
     end
 
