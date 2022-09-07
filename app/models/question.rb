@@ -19,8 +19,4 @@ class Question < ApplicationRecord
   def mark_as_best(answer)
     update(best_answer: answer)
   end
-
-  def rating
-    votes.sum(:rate)
-  end
 end
