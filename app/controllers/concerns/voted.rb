@@ -17,6 +17,8 @@ module Voted
 
   def cancel_vote
     @votable.votes.find_by(user: current_user)&.destroy
+
+    render json: @votable.rating
   end
 
   private
@@ -25,7 +27,7 @@ module Voted
     vote = @votable.votes.build(rate:, user: current_user)
 
     if vote.save
-      render json: vote.rate
+      render json: @votable.rating
     else
       render json: vote.errors.messages.values.flatten, status: :unprocessable_entity
     end

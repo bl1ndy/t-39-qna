@@ -1,18 +1,24 @@
 import Toast from "bootstrap/js/dist/toast"
 
 $(document).on('turbolinks:load', function() {
-  const voteUp = $('.vote-up')
-  const voteDown = $('.vote-down')
   const liveToast = $('#liveToast')
   const toast = new Toast(liveToast)
 
-  voteUp.on('click', () => {
-    $('#liveToast .toast-body').html('Upvoted!')
-    toast.show()
-  })
+  $('.vote-up-form')
+    .on('ajax:success', (e) => {
+      $('.rating').html(e.detail[0])
+    })
+    .on('ajax:error', (e) => {
+      $('#liveToast .toast-body').html(e.detail[0][0])
+      toast.show()
+    })
 
-  voteDown.on('click', () => {
-    $('#liveToast .toast-body').html('Downvoted :(')
-    toast.show()
-  })
+  $('.vote-down-form')
+    .on('ajax:success', (e) => {
+      $('.rating').html(e.detail[0])
+    })
+    .on('ajax:error', (e) => {
+      $('#liveToast .toast-body').html(e.detail[0][0])
+      toast.show()
+    })
 })
