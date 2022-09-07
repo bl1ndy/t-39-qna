@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative 'concerns/voted'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
@@ -8,6 +9,8 @@ RSpec.describe QuestionsController, type: :controller do
   let!(:question) { create(:question, user:) }
   let(:answers) { create_list(:answer, 2, question:, user:) }
   let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
+
+  it_behaves_like 'voted'
 
   describe 'GET #index' do
     before { get :index }

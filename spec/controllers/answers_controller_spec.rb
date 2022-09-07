@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative 'concerns/voted'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
@@ -8,6 +9,8 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question, user:) }
   let!(:answer) { create(:answer, question:, user:) }
   let(:file) { fixture_file_upload(Rails.root.join('spec/rails_helper.rb')) }
+
+  it_behaves_like 'voted'
 
   describe 'POST #create' do
     context 'with valid attributes' do
