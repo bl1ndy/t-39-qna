@@ -28,13 +28,22 @@ feature 'User can vote for other questions', %(
   describe 'Authenticated user' do
     before { visit question_path(another_question) }
 
-    scenario 'can upvote up for question' do
+    scenario 'can upvote for question' do
       within '.question' do
         click_button(class: 'vote-up')
 
         within '.rating' do
-          expect(page).to have_css('.upvoted')
-          expect(page).to have_content('+1')
+          expect(page).to have_content('1')
+        end
+      end
+    end
+
+    scenario 'can cancel own vote' do
+      within '.question' do
+        click_button(class: 'vote-cancel')
+
+        within '.rating' do
+          expect(page).to have_content('0')
         end
       end
     end
@@ -44,10 +53,17 @@ feature 'User can vote for other questions', %(
         click_button(class: 'vote-down')
 
         within '.rating' do
-          expect(page).to have_css('.downvoted')
           expect(page).to have_content('-1')
         end
       end
+    end
+
+    scenario 'can not vote more than 1 time for current question' do
+      within '.question' do
+        click_button(class: 'vote-down')
+      end
+
+      expect(page).to have_content('You have already voted for this post')
     end
   end
 end
