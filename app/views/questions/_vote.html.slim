@@ -1,29 +1,31 @@
-div class="d-flex align-items-center"
+div class="vote-control d-flex align-items-center"
   = button_to vote_up_question_path(@question),
-          form: { data: { type: :json }, class: 'vote-up-form' },
-          remote: true,
-          class: "vote-up btn border-0 #{'hidden' if @user_vote&.rate&.positive?}"
+              form: { data: { type: :json }, class: 'vote-up-form' },
+              remote: true,
+              class: "vote-up btn border-0 #{'hidden' if @user_vote&.rate&.positive?}"
     = image_tag('vote-up.png')
 
   = button_to cancel_vote_question_path(@question),
-          form: { data: { type: :json }, class: "vote-up-cancel-form #{'hidden' unless @user_vote&.rate&.positive?}" },
-          method: :delete,
-          remote: true,
-          class: "vote-up-cancel btn border-0 #{'upvoted' if @user_vote&.rate&.positive?}"
+              form: { data: { type: :json },
+                      class: "vote-up-cancel-form #{'hidden' unless @user_vote&.rate&.positive?}" },
+              method: :delete,
+              remote: true,
+              class: "vote-up-cancel btn border-0 #{'upvoted' if @user_vote&.rate&.positive?}"
     = image_tag('vote-up.png')
 
   span class="fs-1 rating"
     = @question.rating
 
   = button_to vote_down_question_path(@question),
-          form: { data: { type: :json }, class: 'vote-down-form' },
-          remote: true,
-          class: "vote-down btn border-0 #{'hidden' if @user_vote&.rate&.negative?}"
+              form: { data: { type: :json }, class: 'vote-down-form' },
+              remote: true,
+              class: "vote-down btn border-0 #{'hidden' if @user_vote&.rate&.negative?}"
     = image_tag('vote-down.png')
 
   = button_to cancel_vote_question_path(@question),
-          form: { data: { type: :json }, class: "vote-down-cancel-form #{'hidden' unless @user_vote&.rate&.negative?}" },
-          method: :delete,
-          remote: true,
-          class: "vote-down-cancel btn border-0 #{'downvoted' if @user_vote&.rate&.negative?}"
+              form: { data: { type: :json },
+                      class: "vote-down-cancel-form #{'hidden' unless @user_vote&.rate&.negative?}" },
+              method: :delete,
+              remote: true,
+              class: "vote-down-cancel btn border-0 #{'downvoted' if @user_vote&.rate&.negative?}"
     = image_tag('vote-down.png')

@@ -4,7 +4,7 @@
 
   $('.best-label').remove()
   $('<span class="best-label badge bg-success rounded-pill">Best answer</span>')
-    .appendTo($('#answer-' + <%= @answer.id %> + ' .card-header'))
+    .appendTo($('#answer-' + <%= @answer.id %> + ' .answer-info'))
   $('.best-answer-button').removeClass('hidden')
   answerBestButton.addClass('hidden')
   answer.prependTo('.answers')

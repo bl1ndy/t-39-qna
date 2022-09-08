@@ -1,12 +1,17 @@
 div id="answer-#{answer.id}" class="card mb-3"
   div class="card-header small text-muted"
-    => "Posted #{time_ago_in_words(answer.created_at)} ago by"
-    span.text-info
-      => answer.user.email
+    - if current_user
+      div class="d-flex justify-content-center"
+        = render 'answers/vote', answer: answer, user_vote: answer.votes.find_by(user: current_user)
 
-    - if answer == @best_answer
-      span class="best-label badge bg-success rounded-pill"
-        | Best answer
+    div class="answer-info text-center"
+      => "Posted #{time_ago_in_words(answer.created_at)} ago by"
+      span.text-info
+        => answer.user.email
+
+      - if answer == @best_answer
+        span class="best-label badge bg-success rounded-pill"
+          | Best answer
 
   .card-body
     .answer-body
