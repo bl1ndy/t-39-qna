@@ -29,6 +29,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @user_vote = @question.votes.find_by(user: current_user)
     @best_answer = @question.best_answer
     @answers = @question.answers.with_attached_files.where.not(id: @best_answer&.id)
     @answer = @question.answers.build

@@ -41,7 +41,7 @@ feature 'User can vote for other questions', %(
     scenario 'can cancel own vote' do
       within '.question' do
         click_button(class: 'vote-up')
-        click_button(class: 'vote-cancel')
+        click_button(class: 'vote-up-cancel')
 
         within '.rating' do
           expect(page).to have_content('0')
@@ -61,7 +61,7 @@ feature 'User can vote for other questions', %(
 
     scenario 'can not vote more than 1 time for current question' do
       within '.question' do
-        click_button(class: 'vote-down')
+        click_button(class: 'vote-up')
         click_button(class: 'vote-down')
       end
 

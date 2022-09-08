@@ -2,21 +2,7 @@
   div class="row row-cols-lg-2"
     - if current_user
       div class="col-lg-2 d-flex justify-content-center"
-        div class="d-flex align-items-center"
-          = button_to vote_up_question_path(@question),
-                      form: { data: { type: :json }, class: 'vote-up-form' },
-                      remote: true,
-                      class: 'vote-up btn mx-3'
-            = image_tag('vote-up.png')
-
-          span class="fs-1 rating"
-            = @question.rating
-
-          = button_to vote_down_question_path(@question),
-                      form: { data: { type: :json }, class: 'vote-down-form' },
-                      remote: true,
-                      class: 'vote-down btn mx-3'
-            = image_tag('vote-down.png')
+        = render 'vote'
 
     div class="col-lg-10"
       h1.question-title
