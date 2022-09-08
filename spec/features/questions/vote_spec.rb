@@ -11,10 +11,11 @@ feature 'User can vote for other questions', %(
   given(:question) { create(:question, user:) }
   given(:another_question) { create(:question, user: create(:user)) }
 
-  before { sign_in(user) }
-
   describe "Question's author" do
-    before { visit question_path(question) }
+    before do
+      sign_in(user)
+      visit question_path(question)
+    end
 
     scenario 'can not vote for his question' do
       within '.question' do
@@ -26,7 +27,10 @@ feature 'User can vote for other questions', %(
   end
 
   describe 'Authenticated user' do
-    before { visit question_path(another_question) }
+    before do
+      sign_in(user)
+      visit question_path(another_question)
+    end
 
     scenario 'can upvote for question' do
       within '.question' do
@@ -66,6 +70,17 @@ feature 'User can vote for other questions', %(
       end
 
       expect(page).to have_content('You have already voted for this post')
+    end
+  end
+
+  describe 'Not authenticated user' do
+    before { visit question_path(question) }
+
+    scenario 'does not see vote buttons' do
+      within '.question' do
+        expect(page).to have_no_button(class: 'vote-up')
+        expect(page).to have_no_button(class: 'vote-down')
+      end
     end
   end
 end
