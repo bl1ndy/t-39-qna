@@ -1,14 +1,4 @@
 = link_to 'Ask Question', new_question_path, class: 'btn btn-primary btn-lg'
 
 div class="questions mt-3"
-  - @questions.each do |question|
-    div class="card mt-3"
-      div.card-header
-        = link_to question.title, question, class: 'text-decoration-none'
-
-      div.card-body
-        div.card-text
-          ' by
-          span.text-info
-            => question.user.email
-          = "#{time_ago_in_words(question.created_at)} ago"
+  = render @questions

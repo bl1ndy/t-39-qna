@@ -21,6 +21,7 @@ class QuestionsController < ApplicationController
 
     if @question.save
       flash[:success] = 'Your Question successfully created!'
+      publish_question
 
       redirect_to @question
     else
@@ -76,6 +77,15 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    html = ApplicationController.render(
+      partial: 'questions/question',
+      locals: { question: @question }
+    )
+
+    ActionCable.server.broadcast('questions', html)
+  end
 
   def question_params
     params.require(:question).permit(

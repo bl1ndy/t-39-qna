@@ -50,4 +50,28 @@ feature 'User can create a question', %(
 
     expect(page).to have_content('You need to sign in or sign up before continuing.')
   end
+
+  # rubocop:disable RSpec/ExampleLength
+  scenario 'Question appears for another users after create', :js do
+    Capybara.using_session('user') do
+      sign_in(user)
+      visit questions_path
+    end
+
+    Capybara.using_session('guest') do
+      visit questions_path
+    end
+
+    Capybara.using_session('user') do
+      click_on 'Ask Question'
+      fill_in 'Title', with: 'Test Question title'
+      fill_in 'Text', with: 'Test Question text'
+      click_button 'Create'
+    end
+
+    Capybara.using_session('guest') do
+      expect(page).to have_content('Test Question title')
+    end
+  end
+  # rubocop:enable RSpec/ExampleLength
 end
