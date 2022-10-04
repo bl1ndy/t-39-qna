@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require_relative 'concerns/votable'
+require_relative 'concerns/commentable'
 
 RSpec.describe Answer, type: :model do
   describe 'associations' do
@@ -12,6 +13,7 @@ RSpec.describe Answer, type: :model do
     it { should accept_nested_attributes_for(:links) }
 
     it_behaves_like 'votable'
+    it_behaves_like 'commentable'
   end
 
   describe 'validations' do

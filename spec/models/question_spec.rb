@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require_relative 'concerns/votable'
+require_relative 'concerns/commentable'
 
 RSpec.describe Question, type: :model do
   describe 'associations' do
@@ -17,6 +18,7 @@ RSpec.describe Question, type: :model do
     it { should accept_nested_attributes_for(:reward) }
 
     it_behaves_like 'votable'
+    it_behaves_like 'commentable'
   end
 
   describe 'validations' do

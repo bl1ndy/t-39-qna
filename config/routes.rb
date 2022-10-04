@@ -7,12 +7,16 @@ Rails.application.routes.draw do
     end
   end
 
+  concern :commentable do
+    resources :comments, shallow: true, only: %i[create]
+  end
+
   root to: 'questions#index'
 
   devise_for :users
 
   resources :questions do
-    concerns :votable
+    concerns :votable, :commentable
 
     member do
       delete :destroy_file
@@ -20,7 +24,7 @@ Rails.application.routes.draw do
     end
 
     resources :answers, shallow: true, only: %i[create update destroy] do
-      concerns :votable
+      concerns :votable, :commentable
 
       member do
         post :best
