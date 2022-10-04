@@ -29,13 +29,17 @@ class QuestionsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def show
+    gon.question_id = @question.id
+    gon.user_id = current_user&.id
     @user_vote = @question.votes.find_by(user: current_user)
     @best_answer = @question.best_answer
     @answers = @question.answers.with_attached_files.where.not(id: @best_answer&.id)
     @answer = @question.answers.build
     @answer.links.build
   end
+  # rubocop:enable Metrics/AbcSize
 
   def update
     if current_user == @question.user

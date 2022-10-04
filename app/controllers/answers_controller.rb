@@ -9,7 +9,10 @@ class AnswersController < ApplicationController
 
   def create
     @question = Question.find(params[:question_id])
-    @answer = @question.answers.create(answer_params.merge(user: current_user))
+    @answer = @question.answers.build(answer_params.merge(user: current_user))
+
+    publish_answer if @answer.save
+
     @new_answer = @question.answers.build
     @new_answer.links.build
   end
@@ -62,6 +65,18 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    html = ApplicationController.render(
+      partial: 'answers/answer_simplified',
+      locals: { answer: @answer }
+    )
+
+    ActionCable.server.broadcast(
+      "question_#{@question.id}",
+      { html:, author_id: @answer.user.id }
+    )
+  end
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: %i[id title url])

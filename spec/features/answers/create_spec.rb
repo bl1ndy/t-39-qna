@@ -63,4 +63,31 @@ feature 'User can create an answer on the question page', %(
       expect(page).to have_current_path(new_user_session_path)
     end
   end
+
+  describe 'By channel' do
+    # rubocop:disable RSpec/ExampleLength
+    scenario 'Answer appears on question page for another users after create', :js do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        fill_in 'Text', with: 'Test Answer text'
+        click_button 'Post Your Answer'
+
+        # check answer duplicating for author
+        expect(page).to have_content('Test Answer text', count: 1)
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content('Test Answer text')
+      end
+    end
+    # rubocop:enable RSpec/ExampleLength
+  end
 end

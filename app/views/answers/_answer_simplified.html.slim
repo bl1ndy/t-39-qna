@@ -1,0 +1,31 @@
+div id="answer-#{answer.id}" class="card mb-3"
+  div class="card-header small text-muted"
+    div class="answer-info text-center"
+      => "Posted #{time_ago_in_words(answer.created_at)} ago by"
+      span.text-info
+        => answer.user.email
+
+  .card-body
+    .answer-body
+      => answer.body
+
+    - if answer.files.attached?
+      div class="answer-files mt-3"
+        label.small Files
+
+        - answer.files.each do |file|
+          div id="answer-file-#{file.id}" class="small"
+            => link_to file.filename.to_s, url_for(file), class: 'text-decoration-none'
+
+    - if answer.links.any?
+      div class="answer-links mt-3"
+        label.small Links
+
+        - answer.links.each do |link|
+          div id="answer-link-#{link.id}" class="small"
+            => link_to link.title,
+               link.url,
+               class: "text-decoration-none #{'gist-link' if link.gist?}",
+               data: { link_id: link.id }
+
+  div class="card-footer small text-muted"
