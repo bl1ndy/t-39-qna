@@ -4,7 +4,11 @@ $(document).on('turbolinks:load', function() {
   const answers = $('.answers')
 
   if (answers.length) {
-    consumer.subscriptions.create({ channel: "AnswersChannel", question: gon.question_id }, {
+    if (globalThis.currentSubscription) {
+      globalThis.currentSubscription.unsubscribe()
+    }
+
+    globalThis.currentSubscription = consumer.subscriptions.create({ channel: "AnswersChannel", question: gon.question_id }, {
       connected() {
         this.perform('follow')
       },
