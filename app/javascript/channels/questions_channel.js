@@ -4,11 +4,11 @@ $(document).on('turbolinks:load', function() {
   const questions = $('.questions')
 
   if (questions.length) {
-    if (globalThis.currentSubscription) {
-      globalThis.currentSubscription.unsubscribe()
+    if (consumer.subscriptions.subscriptions.some(s => s.identifier.includes('QuestionsChannel'))) {
+      return
     }
 
-    globalThis.currentSubscription = consumer.subscriptions.create("QuestionsChannel", {
+    consumer.subscriptions.create("QuestionsChannel", {
       connected() {
         this.perform('follow')
       },

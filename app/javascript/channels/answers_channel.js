@@ -4,17 +4,21 @@ $(document).on('turbolinks:load', function() {
   const answers = $('.answers')
 
   if (answers.length) {
-    if (globalThis.currentSubscription) {
-      globalThis.currentSubscription.unsubscribe()
+    if (globalThis.answersSubscription) {
+      globalThis.answersSubscription.unsubscribe()
     }
 
-    globalThis.currentSubscription = consumer.subscriptions.create({ channel: "AnswersChannel", question: gon.question_id }, {
+    const questionId = $('.question').parent().data('questionId')
+
+    globalThis.answersSubscription = consumer.subscriptions.create({ channel: "AnswersChannel", question: questionId }, {
       connected() {
         this.perform('follow')
       },
 
       received(data) {
-        if (data.author_id != gon.user_id) {
+        const userId = $('#user-id').data('userId')
+
+        if (data.author_id != userId) {
           answers.append(data.html)
         }
       }

@@ -9,6 +9,8 @@ div id="answer-#{answer.id}" class="card mb-3"
     .answer-body
       => answer.body
 
+    hr
+
     - if answer.files.attached?
       div class="answer-files mt-3"
         label.small Files
@@ -27,5 +29,8 @@ div id="answer-#{answer.id}" class="card mb-3"
                link.url,
                class: "text-decoration-none #{'gist-link' if link.gist?}",
                data: { link_id: link.id }
+
+    div.comments
+      = render answer.comments
 
   div class="card-footer small text-muted"
