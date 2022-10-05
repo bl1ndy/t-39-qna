@@ -38,6 +38,8 @@ class QuestionsController < ApplicationController
     @answers = @question.answers.with_attached_files.where.not(id: @best_answer&.id)
     @answer = @question.answers.build
     @answer.links.build
+    @question_comment = @question.comments.build
+    @answer_comment = @answer.comments.build
   end
   # rubocop:enable Metrics/AbcSize
 

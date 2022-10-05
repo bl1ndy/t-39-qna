@@ -1,0 +1,8 @@
+commentable = $('#<%= @commentable.class.name.underscore %>-<%= @commentable.id %>')
+
+<% if @comment.errors.any? %>
+  $(commentable).find('.comment-errors').html('<%= j render 'shared/errors', object: @comment %>')
+<% else %>
+  $(commentable).find('.comments').append('<%= j render @comment %>')
+  $(commentable).find('#comment_body').val('')
+<% end %>

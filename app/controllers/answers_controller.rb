@@ -13,6 +13,7 @@ class AnswersController < ApplicationController
 
     publish_answer if @answer.save
 
+    @answer_comment = @answer.comments.build
     @new_answer = @question.answers.build
     @new_answer.links.build
   end
@@ -22,6 +23,7 @@ class AnswersController < ApplicationController
 
     if current_user == @answer.user
       @answer.update(answer_params)
+      @answer_comment = @answer.comments.build
     else
       head :forbidden
     end

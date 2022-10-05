@@ -18,8 +18,8 @@ feature 'User can add comments to question/answer', %(
     end
 
     scenario 'adds comment to question' do
-      within '#question-comments' do
-        fill_in(placeholder: 'text', with: 'Test question comment')
+      within "#question-#{question.id}" do
+        fill_in(id: 'comment_body', with: 'Test question comment')
         click_button 'Add a comment'
 
         expect(page).to have_content('Test question comment')
@@ -27,8 +27,8 @@ feature 'User can add comments to question/answer', %(
     end
 
     scenario 'adds comment to answer' do
-      within "#answer-#{answer.id}-comments" do
-        fill_in(placeholder: 'text', with: 'Test answer comment')
+      within "#answer-#{answer.id}" do
+        fill_in(id: 'comment_body', with: 'Test answer comment')
         click_button 'Add a comment'
 
         expect(page).to have_content('Test answer comment')
@@ -36,13 +36,13 @@ feature 'User can add comments to question/answer', %(
     end
 
     scenario 'adds a comment with errors' do
-      within '#question-comments' do
+      within "#question-#{question.id}" do
         click_button 'Add a comment'
 
         expect(page).to have_content("Body can't be blank")
       end
 
-      within "#answer-#{answer.id}-comments" do
+      within "#answer-#{answer.id}" do
         click_button 'Add a comment'
 
         expect(page).to have_content("Body can't be blank")
@@ -54,7 +54,8 @@ feature 'User can add comments to question/answer', %(
     scenario 'does not see new comment form' do
       visit question_path(question)
 
-      expect(page).to have_no_content('Add a comment')
+      expect(page).to have_no_css('#comment_body')
+      expect(page).to have_no_button('Add a comment')
     end
   end
 
@@ -71,13 +72,13 @@ feature 'User can add comments to question/answer', %(
       end
 
       Capybara.using_session('user') do
-        within '#question-comments' do
-          fill_in(placeholder: 'text', with: 'Test question comment')
+        within "#question-#{question.id}" do
+          fill_in(id: 'comment_body', with: 'Test question comment')
           click_button 'Add a comment'
         end
 
-        within "#answer-#{answer.id}-comments" do
-          fill_in(placeholder: 'text', with: 'Test answer comment')
+        within "#answer-#{answer.id}" do
+          fill_in(id: 'comment_body', with: 'Test answer comment')
           click_button 'Add a comment'
         end
       end

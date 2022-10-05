@@ -1,56 +1,63 @@
-.question
-  div class="row row-cols-lg-2"
+div id="question-#{@question.id}" data-question-id="#{@question.id}"
+  .question
+    div class="row row-cols-lg-2"
+      - if current_user
+        div class="col-lg-2 d-flex justify-content-center"
+          = render 'vote'
+
+      div class="col-lg-10"
+        h1.question-title
+          => @question.title
+
+        - if current_user == @question.user
+          .question-control
+            => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
+            = link_to 'Delete',
+                      question_path(@question),
+                      method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
+                      class: 'btn btn-sm btn-danger'
+
+        div class="hidden edit-question-form mt-3"
+          = render 'edit_form'
+
+        div class="mt-3 small text-muted"
+          => "Asked #{time_ago_in_words(@question.created_at)} ago by"
+          span.text-info
+            = @question.user.email
+
+          div
+            - if @question.reward
+              | Author offers a Reward for Best Answer!
+
+    hr
+
+    div class="question-body mb-3"
+      = @question.body
+
+    hr
+
+    div.comments
+      = render @question.comments
+
     - if current_user
-      div class="col-lg-2 d-flex justify-content-center"
-        = render 'vote'
+      = render 'comments/form', commentable: @question, comment: @question_comment
 
-    div class="col-lg-10"
-      h1.question-title
-        => @question.title
+    .row
+      div class="col mb-3 question-files-card #{'hidden' unless @question.files.attached?}"
+        .card
+          .card-header
+            label.small Files
 
-      - if current_user == @question.user
-        .question-control
-          => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
-          = link_to 'Delete',
-                    question_path(@question),
-                    method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
-                    class: 'btn btn-sm btn-danger'
+          div class="question-files card-body"
+            = render partial: 'file', collection: @question.files
 
-      div class="hidden edit-question-form mt-3"
-        = render 'edit_form'
+      div class="col question-links-card #{'hidden' if @question.links.empty?}"
+        .card
+          .card-header
+            label.small Links
 
-      div class="mt-3 small text-muted"
-        => "Asked #{time_ago_in_words(@question.created_at)} ago by"
-        span.text-info
-          = @question.user.email
-
-        div
-          - if @question.reward
-            | Author offers a Reward for Best Answer!
-
-  hr
-
-  div class="question-body mb-3"
-    = @question.body
-
-  hr
-
-  .row
-    div class="col mb-3 question-files-card #{'hidden' unless @question.files.attached?}"
-      .card
-        .card-header
-          label.small Files
-
-        div class="question-files card-body"
-          = render partial: 'file', collection: @question.files
-
-    div class="col question-links-card #{'hidden' if @question.links.empty?}"
-      .card
-        .card-header
-          label.small Links
-
-        div class="question-links card-body"
-          = render partial: 'link', collection: @question.links
+          div class="question-links card-body"
+            = render partial: 'link', collection: @question.links
 
 h3.mt-3 Answers
 
