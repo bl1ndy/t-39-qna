@@ -1,3 +1,15 @@
+/**** Extend Devise alerts with Bootstrap ****/
+
+.alert-notice {
+  @extend .alert-info !optional;
+}
+
+.alert-alert {
+  @extend .alert-danger !optional;
+}
+
+/**** End ****/
+
 .hidden {
   display: none;
 }
