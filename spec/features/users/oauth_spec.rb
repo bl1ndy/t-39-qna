@@ -28,4 +28,20 @@ feature 'User can sign in via OAuth', %(
 
     expect(page).to have_content('Could not authenticate you from GitHub')
   end
+
+  scenario 'User tries to sign in via VK' do
+    OmniAuth.config.mock_auth[:vkontakte] = OmniAuth::AuthHash.new(
+      provider: 'vkontakte', uid: '123456', info: { email: 'mocked@user.com' }
+    )
+    click_link('Sign in with Vkontakte')
+
+    expect(page).to have_content('Successfully authenticated from VK account.')
+  end
+
+  scenario 'User tries to sign in via VK with invalid credentials' do
+    OmniAuth.config.mock_auth[:vkontakte] = :invalid_credentials
+    click_link('Sign in with Vkontakte')
+
+    expect(page).to have_content('Could not authenticate you from Vkontakte')
+  end
 end

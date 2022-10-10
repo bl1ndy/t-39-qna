@@ -276,6 +276,13 @@ Devise.setup do |config|
                   Rails.application.credentials[Rails.env.to_sym][:github][:app_secret],
                   scope: 'user:email, read:user'
 
+  config.omniauth :vkontakte,
+                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:client_id],
+                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:client_secret],
+                  scope: 'email',
+                  redirect_url: 'http://127.0.0.1:3000/users/auth/vkontakte/callback',
+                  client_options: { auth_scheme: 'request_body' }
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

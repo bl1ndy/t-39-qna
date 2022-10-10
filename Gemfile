@@ -15,6 +15,7 @@ gem 'net-smtp', require: false
 gem 'omniauth', '~> 2.1'
 gem 'omniauth-github', '~> 2.0', '>= 2.0.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
+gem 'omniauth-vkontakte', '~> 1.8'
 gem 'pg', '~> 1.4', '>= 1.4.1'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.6'
