@@ -277,8 +277,8 @@ Devise.setup do |config|
                   scope: 'user:email, read:user'
 
   config.omniauth :vkontakte,
-                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:client_id],
-                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:client_secret],
+                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:app_id],
+                  Rails.application.credentials[Rails.env.to_sym][:vkontakte][:app_secret],
                   scope: 'email',
                   redirect_url: 'http://127.0.0.1:3000/users/auth/vkontakte/callback',
                   client_options: { auth_scheme: 'request_body' }
