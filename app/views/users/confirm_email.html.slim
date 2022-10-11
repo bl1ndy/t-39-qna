@@ -1,0 +1,9 @@
+h2 Email confirmation
+
+= form_for(User.new, url: users_confirm_email_path, local: true) do |f|
+  .mb-3
+    = f.label :email, class: 'form-label'
+    = f.email_field :email, autofocus: true, class: 'form-control'
+
+  .mb-3
+    = f.submit 'Send confirmation link', class: 'btn btn-primary'

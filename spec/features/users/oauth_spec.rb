@@ -10,6 +10,8 @@ feature 'User can sign in via OAuth', %(
   OmniAuth.config.test_mode = true
 
   background do
+    OmniAuth.config.mock_auth.delete(:github)
+    OmniAuth.config.mock_auth.delete(:vkontakte)
     visit new_user_session_path
   end
 
@@ -29,12 +31,19 @@ feature 'User can sign in via OAuth', %(
     expect(page).to have_content('Could not authenticate you from GitHub')
   end
 
-  scenario 'User tries to sign in via VK' do
-    OmniAuth.config.mock_auth[:vkontakte] = OmniAuth::AuthHash.new(
-      provider: 'vkontakte', uid: '123456', info: { email: 'mocked@user.com' }
-    )
+  scenario 'User tries to sign in via VK without email access' do
+    OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(provider: 'vkontakte', uid: '123456')
     click_link('Sign in with Vkontakte')
+    expect(page).to have_content 'Email confirmation'
 
+    fill_in 'Email', with: 'oauth@test.com'
+    click_button 'Send confirmation link'
+
+    open_email('oauth@test.com')
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content('Your email address has been successfully confirmed')
+
+    click_link('Sign in with Vkontakte')
     expect(page).to have_content('Successfully authenticated from VK account.')
   end
 
