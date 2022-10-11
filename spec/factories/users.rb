@@ -8,5 +8,10 @@ FactoryBot.define do
   factory :user do
     email
     password { '12345678' }
+    confirmed_at { Time.zone.now }
+  end
+
+  trait :unconfirmed do
+    confirmed_at { nil }
   end
 end

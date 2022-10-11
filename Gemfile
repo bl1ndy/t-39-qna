@@ -32,6 +32,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'letter_opener', '~> 1.8', '>= 1.8.1'
   gem 'listen', '~> 3.3'
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'rubocop', '~> 1.30', '>= 1.30.1', require: false
@@ -44,6 +45,7 @@ end
 
 group :test do
   gem 'capybara', '>= 3.26'
+  gem 'capybara-email', '~> 3.0', '>= 3.0.2'
   gem 'launchy', '~> 2.5'
   gem 'rails-controller-testing', '~> 1.0', '>= 1.0.5'
   gem 'selenium-webdriver', '>= 4.0.0.rc1'

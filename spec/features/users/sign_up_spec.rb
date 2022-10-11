@@ -7,7 +7,7 @@ feature 'User can sign up.', %(
   As a guest
   I'd like to be able to sign up
 ) do
-  given!(:user) { User.create(email: 'old_user@test.com', password: '87654321') }
+  given!(:user) { User.create(email: 'old_user@test.com', password: '87654321', confirmed_at: Time.zone.now) }
 
   background { visit new_user_registration_path }
 
@@ -17,7 +17,13 @@ feature 'User can sign up.', %(
     fill_in 'Password confirmation', with: '12345678'
     click_button 'Sign up'
 
-    expect(page).to have_content('Welcome! You have signed up successfully.')
+    expect(page).to have_content('A message with a confirmation link has been sent to your email address.')
+
+    open_email('new_user@test.com')
+    expect(current_email).to have_content('You can confirm your account email through the link below')
+
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content('Your email address has been successfully confirmed')
   end
 
   scenario 'Guest tries to sign up with errors' do
