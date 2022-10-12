@@ -4,7 +4,7 @@ div id="question-link-#{link.id}" class="small"
              class: "text-decoration-none #{'gist-link' if link.gist?}",
              data: { link_id: link.id }
 
-  - if current_user == @question.user
+  - if policy(@question).destroy_link?
     span class="badge bg-danger rounded-pill"
       = link_to '',
                 destroy_link_question_path(link_id: link.id),

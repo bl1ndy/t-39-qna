@@ -9,13 +9,15 @@ div id="question-#{@question.id}" data-question-id="#{@question.id}"
         h1.question-title
           => @question.title
 
-        - if current_user == @question.user
+        - if policy(@question).update?
           .question-control
             => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
-            = link_to 'Delete',
-                      question_path(@question),
-                      method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
-                      class: 'btn btn-sm btn-danger'
+
+            - if policy(@question).destroy?
+              = link_to 'Delete',
+                        question_path(@question),
+                        method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
+                        class: 'btn btn-sm btn-danger'
 
         div class="hidden edit-question-form mt-3"
           = render 'edit_form'

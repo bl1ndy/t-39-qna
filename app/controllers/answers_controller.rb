@@ -19,51 +19,39 @@ class AnswersController < ApplicationController
   end
 
   def update
+    authorize @answer
+
     @best_answer = @question.best_answer
 
-    if current_user == @answer.user
-      @answer.update(answer_params)
-      @answer_comment = @answer.comments.build
-    else
-      head :forbidden
-    end
+    @answer.update(answer_params)
+    @answer_comment = @answer.comments.build
   end
 
   def destroy
-    if current_user == @answer.user
-      @answer.destroy
-    else
-      head :forbidden
-    end
+    authorize @answer
+
+    @answer.destroy
   end
 
   def best
-    if current_user == @question.user
-      @question.mark_as_best(@answer)
-      @question.reward&.update(user: @answer.user)
-    else
-      head :forbidden
-    end
+    authorize @answer
+
+    @question.mark_as_best(@answer)
+    @question.reward&.update(user: @answer.user)
   end
 
   def destroy_file
-    @file = ActiveStorage::Attachment.find(params[:file_id])
+    authorize @answer
 
-    if current_user == @answer.user
-      @file.purge
-    else
-      head :forbidden
-    end
+    @file = ActiveStorage::Attachment.find(params[:file_id])
+    @file.purge
   end
 
   def destroy_link
-    @link = Link.find(params[:link_id])
+    authorize @answer
 
-    if current_user == @answer.user
-      @link.destroy
-    else
-      head :forbidden
-    end
+    @link = Link.find(params[:link_id])
+    @link.destroy
   end
 
   private

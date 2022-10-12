@@ -1,7 +1,7 @@
 div id="question-file-#{file.id}" class="small"
   => link_to file.filename.to_s, url_for(file), class: 'text-decoration-none'
 
-  - if current_user == @question.user
+  - if policy(@question).destroy_file?
     span class="badge bg-danger rounded-pill"
       = link_to '',
                 destroy_file_question_path(file_id: file.id),

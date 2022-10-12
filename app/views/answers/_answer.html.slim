@@ -39,14 +39,16 @@ div id="answer-#{answer.id}" class="card mb-3"
       = render 'comments/form', commentable: answer, comment: @answer_comment
 
   div class="card-footer small text-muted"
-    - if current_user == answer.user
+    - if policy(answer).update?
       => link_to 'Edit', '#', class: 'edit-answer-link btn btn-sm btn-warning', data: { answer_id: answer.id }
+
+    - if policy(answer).destroy?
       => link_to 'Delete',
                  answer_path(answer),
                  method: :delete, data: { confirm: 'Are you sure?' }, remote: true,
                  class: 'btn btn-sm btn-danger answer-delete-link'
 
-    - if current_user == @question.user
+    - if policy(answer).best?
       = button_to 'Best',
                   best_answer_path(answer),
                   form: { class: 'd-inline-block' },

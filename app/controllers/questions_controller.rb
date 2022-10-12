@@ -42,42 +42,32 @@ class QuestionsController < ApplicationController
   # rubocop:enable Metrics/AbcSize
 
   def update
-    if current_user == @question.user
-      @question.update(question_params)
-    else
-      head :forbidden
-    end
+    authorize @question
+
+    @question.update(question_params)
   end
 
   def destroy
-    if current_user == @question.user
-      @question.destroy
-      flash[:success] = 'Your Question successfully deleted!'
+    authorize @question
 
-      redirect_to questions_path
-    else
-      head :forbidden
-    end
+    @question.destroy
+    flash[:success] = 'Your Question successfully deleted!'
+
+    redirect_to questions_path
   end
 
   def destroy_file
-    @file = ActiveStorage::Attachment.find(params[:file_id])
+    authorize @question
 
-    if current_user == @question.user
-      @file.purge
-    else
-      head :forbidden
-    end
+    @file = ActiveStorage::Attachment.find(params[:file_id])
+    @file.purge
   end
 
   def destroy_link
-    @link = Link.find(params[:link_id])
+    authorize @question
 
-    if current_user == @question.user
-      @link.destroy
-    else
-      head :forbidden
-    end
+    @link = Link.find(params[:link_id])
+    @link.destroy
   end
 
   private
