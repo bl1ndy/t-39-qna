@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative 'concern/api_authorizable'
 
 RSpec.describe 'Profiles API', type: :request do
   let(:headers) do
@@ -11,25 +12,17 @@ RSpec.describe 'Profiles API', type: :request do
   end
 
   describe 'GET /api/v1/profiles/me' do
-    context 'when not authorized' do
-      it 'returns 401 if there is no access_token' do
-        get('/api/v1/profiles/me', headers:)
+    let(:api_path) { '/api/v1/profiles/me' }
 
-        expect(response).to have_http_status(:unauthorized)
-      end
-
-      it 'returns 401 if access_token is invalid' do
-        get('/api/v1/profiles/me', params: { access_token: '123' }, headers:)
-
-        expect(response).to have_http_status(:unauthorized)
-      end
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
     end
 
     context 'when authorized' do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-      before { get('/api/v1/profiles/me', params: { access_token: access_token.token }, headers:) }
+      before { get(api_path, params: { access_token: access_token.token }, headers:) }
 
       it 'returns 200' do
         expect(response).to be_successful
