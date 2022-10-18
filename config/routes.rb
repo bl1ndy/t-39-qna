@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     resources :comments, shallow: true, only: %i[create]
   end
 
+  use_doorkeeper
+
   root to: 'questions#index'
 
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
@@ -37,4 +39,12 @@ Rails.application.routes.draw do
   end
 
   resource :achievements, only: %i[show]
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        get :me, on: :collection
+      end
+    end
+  end
 end
