@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.2'
 
+gem 'active_model_serializers', '~> 0.10.13'
 gem 'aws-sdk-s3', '~> 1.114', require: false
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cocoon', '~> 1.2', '>= 1.2.15'
@@ -13,6 +14,7 @@ gem 'doorkeeper', '~> 5.6'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.5'
 gem 'net-smtp', require: false
+gem 'oj', '~> 3.13', '>= 3.13.21'
 gem 'omniauth', '~> 2.1'
 gem 'omniauth-github', '~> 2.0', '>= 2.0.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
