@@ -55,8 +55,4 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   def question
     @question ||= Question.find(params[:id])
   end
-
-  def pundit_user
-    current_resource_owner
-  end
 end
