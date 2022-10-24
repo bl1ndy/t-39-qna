@@ -18,13 +18,9 @@ RSpec.describe 'Questions API', type: :request do
       let(:method) { :get }
     end
 
-    # rubocop:disable RSpec/MultipleMemoizedHelpers, RSpec/NestedGroups
     context 'when authorized' do
       let(:access_token) { create(:access_token) }
       let!(:questions) { create_list(:question, 2) }
-      let(:question) { questions.first }
-      let(:question_response) { json['questions'].first }
-      let!(:answers) { create_list(:answer, 3, question:, user: create(:user)) }
 
       before { get(api_path, params: { access_token: access_token.token }, headers:) }
 
@@ -33,7 +29,29 @@ RSpec.describe 'Questions API', type: :request do
       end
 
       it 'returns questions list' do
-        expect(json['questions'].size).to eq(2)
+        expect(json['questions'].size).to eq(questions.size)
+      end
+    end
+  end
+
+  describe 'GET /api/v1/questions/:id' do
+    let(:question) { create(:question) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :get }
+    end
+
+    context 'when authorized' do
+      let(:access_token) { create(:access_token) }
+      let(:question_response) { json['question'] }
+
+      before do
+        create_list(:comment, 3, commentable: question, user: create(:user))
+        create_list(:link, 3, linkable: question)
+        question.files.attach(io: File.open(Rails.root.join('spec/rails_helper.rb')), filename: 'rails_helper.rb')
+
+        get(api_path, params: { access_token: access_token.token }, headers:)
       end
 
       it 'returns all public fields' do
@@ -50,21 +68,20 @@ RSpec.describe 'Questions API', type: :request do
         expect(question_response['short_title']).to eq(question.title.truncate(10))
       end
 
-      describe 'answers' do
-        let(:answer) { answers.first }
-        let(:answer_response) { question_response['answers'].first }
-
-        it 'returns answers list' do
-          expect(question_response['answers'].size).to eq(3)
-        end
-
-        it 'returns all public fields' do
-          %w[id body question_id user_id created_at updated_at].each do |attribute|
-            expect(answer_response[attribute]).to eq(answer.send(attribute).as_json)
-          end
-        end
+      it 'contains comments list' do
+        expect(question_response['comments'].size).to eq(question.comments.size)
       end
-      # rubocop:enable RSpec/MultipleMemoizedHelpers, RSpec/NestedGroups
+
+      it 'contains links list' do
+        expect(question_response['links'].size).to eq(question.links.size)
+      end
+
+      it 'contains files urls list' do
+        file_url = Rails.application.routes.url_helpers.rails_blob_path(question.files.first, only_path: true)
+
+        expect(question_response['files'].size).to eq(question.files.size)
+        expect(question_response['files'].first['url']).to eq(file_url)
+      end
     end
   end
 end
