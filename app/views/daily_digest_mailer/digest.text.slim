@@ -1,0 +1,8 @@
+| QnA Daily Digest
+= "\r\n" * 2
+| Yesterday questions:
+= "\r\n" * 2
+
+- @questions.each do |question|
+  = "#{question.title} - #{question_url(question)}"
+  = "\r\n" * 2
