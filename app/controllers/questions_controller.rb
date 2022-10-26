@@ -21,7 +21,7 @@ class QuestionsController < ApplicationController
 
     if @question.save
       flash[:success] = 'Your Question successfully created!'
-      subscribe_author
+      subscribe_current_user
       publish_question
 
       redirect_to @question
@@ -72,7 +72,7 @@ class QuestionsController < ApplicationController
   end
 
   def subscribe
-    current_user.subscriptions.create(question: @question)
+    subscribe_current_user
   end
 
   def unsubscribe
@@ -81,7 +81,7 @@ class QuestionsController < ApplicationController
 
   private
 
-  def subscribe_author
+  def subscribe_current_user
     current_user.subscriptions.create(question: @question)
   end
 
