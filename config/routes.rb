@@ -31,6 +31,8 @@ Rails.application.routes.draw do
     member do
       delete :destroy_file
       delete :destroy_link
+      post :subscribe
+      delete :unsubscribe
     end
 
     resources :answers, shallow: true, only: %i[create update destroy] do

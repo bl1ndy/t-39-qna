@@ -31,6 +31,9 @@ div id="question-#{@question.id}" data-question-id="#{@question.id}"
             - if @question.reward
               | Author offers a Reward for Best Answer!
 
+        - if current_user
+          = render 'subscribe'
+
     hr
 
     div class="question-body mb-3"

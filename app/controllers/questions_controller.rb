@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: %i[index show]
-  before_action :set_question, only: %i[show update destroy destroy_file destroy_link]
+  before_action :set_question, except: %i[index new create]
 
   def index
     @questions = Question.all
@@ -21,6 +21,7 @@ class QuestionsController < ApplicationController
 
     if @question.save
       flash[:success] = 'Your Question successfully created!'
+      subscribe_author
       publish_question
 
       redirect_to @question
@@ -70,7 +71,19 @@ class QuestionsController < ApplicationController
     @link.destroy
   end
 
+  def subscribe
+    current_user.subscriptions.create(question: @question)
+  end
+
+  def unsubscribe
+    current_user.subscriptions.find_by(question: @question)&.destroy
+  end
+
   private
+
+  def subscribe_author
+    current_user.subscriptions.create(question: @question)
+  end
 
   def publish_question
     html = ApplicationController.render(

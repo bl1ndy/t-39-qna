@@ -21,4 +21,8 @@ class Question < ApplicationRecord
   def mark_as_best(answer)
     update(best_answer: answer)
   end
+
+  def subscribed_by?(user)
+    subscriptions.find_by(user:)
+  end
 end
