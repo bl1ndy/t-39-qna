@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, lambda { |u| u.confirmed? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   concern :votable do
     member do
       post :vote_up

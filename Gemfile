@@ -24,10 +24,13 @@ gem 'puma', '~> 5.0'
 gem 'pundit', '~> 2.2'
 gem 'rails', '~> 6.1.6'
 gem 'sass-rails', '>= 6'
+gem 'sidekiq', '~> 6.5', '>= 6.5.7'
+gem 'sinatra', '~> 3.0', '>= 3.0.2', require: false
 gem 'slim-rails', '~> 3.5', '>= 3.5.1'
 gem 'turbolinks', '~> 5'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'webpacker', '~> 5.0'
+gem 'whenever', '~> 1.0', require: false
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
