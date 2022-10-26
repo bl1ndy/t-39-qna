@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
     it { should have_many(:rewards) }
     it { should have_many(:votes).dependent(:destroy) }
     it { should have_many(:comments).dependent(:destroy) }
+    it { should have_many(:subscriptions).dependent(:destroy) }
     it { should have_many(:authorizations).dependent(:destroy) }
     it { should have_many(:access_grants).dependent(:destroy) }
     it { should have_many(:access_tokens).dependent(:destroy) }
