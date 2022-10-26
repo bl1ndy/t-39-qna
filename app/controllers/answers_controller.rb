@@ -7,16 +7,21 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: %i[update destroy best destroy_file destroy_link]
   before_action :set_question, only: %i[update destroy best]
 
+  # rubocop:disable Metrics/AbcSize
   def create
     @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params.merge(user: current_user))
 
-    publish_answer if @answer.save
+    if @answer.save
+      notify_subscribers
+      publish_answer
+    end
 
     @answer_comment = @answer.comments.build
     @new_answer = @question.answers.build
     @new_answer.links.build
   end
+  # rubocop:enable Metrics/AbcSize
 
   def update
     authorize @answer
@@ -55,6 +60,10 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def notify_subscribers
+    QuestionNotificationJob.perform_later(@question)
+  end
 
   def publish_answer
     html = ApplicationController.render(
