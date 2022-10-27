@@ -19,4 +19,15 @@ RSpec.describe Answer, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:body) }
   end
+
+  describe 'callbacks' do
+    let(:answer) { create(:answer, user: create(:user)) }
+
+    it 'fires notify_question_subscribers callback after create' do
+      allow(answer).to receive(:notify_question_subscribers)
+      answer.run_callbacks(:create)
+
+      expect(answer).to have_received(:notify_question_subscribers)
+    end
+  end
 end

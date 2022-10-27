@@ -11,4 +11,12 @@ class Answer < ApplicationRecord
   has_many_attached :files
 
   validates :body, presence: true
+
+  after_create :notify_question_subscribers
+
+  private
+
+  def notify_question_subscribers
+    QuestionNotificationJob.perform_later(question)
+  end
 end
