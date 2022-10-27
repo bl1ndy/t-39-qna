@@ -18,11 +18,19 @@ class Question < ApplicationRecord
 
   validates :title, :body, presence: true
 
+  after_create :subscribe_author
+
   def mark_as_best(answer)
     update(best_answer: answer)
   end
 
   def subscribed_by?(user)
     subscriptions.find_by(user:)
+  end
+
+  private
+
+  def subscribe_author
+    subscriptions.create(user:)
   end
 end

@@ -26,4 +26,15 @@ RSpec.describe Question, type: :model do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:body) }
   end
+
+  describe 'callbacks' do
+    let(:question) { create(:question) }
+
+    it 'fires subscribe_author callback after create' do
+      allow(question).to receive(:subscribe_author)
+      question.run_callbacks(:create)
+
+      expect(question).to have_received(:subscribe_author)
+    end
+  end
 end

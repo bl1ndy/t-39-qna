@@ -21,7 +21,6 @@ class QuestionsController < ApplicationController
 
     if @question.save
       flash[:success] = 'Your Question successfully created!'
-      subscribe_current_user
       publish_question
 
       redirect_to @question
@@ -33,6 +32,7 @@ class QuestionsController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   def show
     @user_vote = @question.votes.find_by(user: current_user)
+    @subscription = @question.subscriptions.find_by(user: current_user)
     @best_answer = @question.best_answer
     @answers = @question.answers.with_attached_files.where.not(id: @best_answer&.id)
     @answer = @question.answers.build
@@ -71,19 +71,7 @@ class QuestionsController < ApplicationController
     @link.destroy
   end
 
-  def subscribe
-    subscribe_current_user
-  end
-
-  def unsubscribe
-    current_user.subscriptions.find_by(question: @question)&.destroy
-  end
-
   private
-
-  def subscribe_current_user
-    current_user.subscriptions.create(question: @question)
-  end
 
   def publish_question
     html = ApplicationController.render(
