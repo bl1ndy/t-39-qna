@@ -7,6 +7,6 @@ class QuestionNotificationService
   end
 
   def call
-    @subscribers.each { |user| QuestionNotificationMailer.notify(@question, user).deliver_now }
+    @subscribers.each { |user| QuestionNotificationMailer.notify(@question, user).deliver_later }
   end
 end
