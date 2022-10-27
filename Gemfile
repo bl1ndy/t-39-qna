@@ -13,6 +13,7 @@ gem 'devise', '~> 4.8', '>= 4.8.1'
 gem 'doorkeeper', '~> 5.6'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.5'
+gem 'mysql2', '~> 0.5.4'
 gem 'net-smtp', require: false
 gem 'oj', '~> 3.13', '>= 3.13.21'
 gem 'omniauth', '~> 2.1'
@@ -27,6 +28,7 @@ gem 'sass-rails', '>= 6'
 gem 'sidekiq', '~> 6.5', '>= 6.5.7'
 gem 'sinatra', '~> 3.0', '>= 3.0.2', require: false
 gem 'slim-rails', '~> 3.5', '>= 3.5.1'
+gem 'thinking-sphinx', '~> 5.4'
 gem 'turbolinks', '~> 5'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'webpacker', '~> 5.0'
