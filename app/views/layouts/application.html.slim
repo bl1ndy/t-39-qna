@@ -18,6 +18,8 @@ html
     div class="hidden" id="user-id" data-user-id="#{current_user&.id}"
 
     main class="container mt-3"
+      = render 'search/form'
+
       - flash.each do |message_type, message|
         div class="alert alert-#{message_type}"
           = message

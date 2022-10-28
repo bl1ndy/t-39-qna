@@ -55,6 +55,7 @@ end
 group :test do
   gem 'capybara', '>= 3.26'
   gem 'capybara-email', '~> 3.0', '>= 3.0.2'
+  gem 'database_cleaner-active_record'
   gem 'launchy', '~> 2.5'
   gem 'rails-controller-testing', '~> 1.0', '>= 1.0.5'
   gem 'selenium-webdriver', '>= 4.0.0.rc1'

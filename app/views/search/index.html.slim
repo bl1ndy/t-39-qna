@@ -1,0 +1,6 @@
+- if @results.any?
+  - @results.each do |r|
+    p class="search-result"
+      = r.inspect
+- else
+  | Nothing found
