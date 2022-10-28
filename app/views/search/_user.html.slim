@@ -1,0 +1,12 @@
+div class="card mt-3 search-result"
+  div.card-header
+    span class="badge bg-warning"
+      | user
+    span class="mx-1"
+      = resource.email
+
+  div.card-body
+    div.card-text
+      ' registered
+      span.text-info
+        => "#{time_ago_in_words(resource.created_at)} ago"

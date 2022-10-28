@@ -1,0 +1,11 @@
+div class="card mt-3 search-result"
+  div.card-header
+    span class="badge bg-primary"
+      | question
+    = link_to resource.title, resource, class: 'text-decoration-none mx-1'
+
+  div.card-body
+    div.card-text
+      ' created
+      span.text-info
+        => "#{time_ago_in_words(resource.created_at)} ago"

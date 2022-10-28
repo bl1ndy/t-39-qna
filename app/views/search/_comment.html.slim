@@ -1,0 +1,15 @@
+div class="card mt-3 search-result"
+  div.card-header
+    span class="badge bg-info"
+      | comment
+    span class="mx-1"
+      - if resource.commentable.is_a?(Answer)
+        = link_to resource.body, resource.commentable.question, class: 'text-decoration-none'
+      - else
+        = link_to resource.body, resource.commentable, class: 'text-decoration-none'
+
+  div.card-body
+    div.card-text
+      ' created
+      span.text-info
+        => "#{time_ago_in_words(resource.created_at)} ago"
