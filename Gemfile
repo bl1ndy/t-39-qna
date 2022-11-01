@@ -14,6 +14,8 @@ gem 'doorkeeper', '~> 5.6'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.5'
 gem 'mysql2', '~> 0.5.4'
+gem 'net-imap', '~> 0.3.1'
+gem 'net-pop', '~> 0.1.2'
 gem 'net-smtp', require: false
 gem 'oj', '~> 3.13', '>= 3.13.21'
 gem 'omniauth', '~> 2.1'
@@ -41,6 +43,12 @@ group :development, :test do
 end
 
 group :development do
+  gem 'capistrano', '~> 3.17', '>= 3.17.1', require: false
+  gem 'capistrano-bundler', '~> 2.1', require: false
+  gem 'capistrano-passenger', '~> 0.2.1', require: false
+  gem 'capistrano-rails', '~> 1.6', '>= 1.6.2', require: false
+  gem 'capistrano-rbenv', '~> 2.2', require: false
+  gem 'capistrano-sidekiq', '~> 2.3'
   gem 'letter_opener', '~> 1.8', '>= 1.8.1'
   gem 'listen', '~> 3.3'
   gem 'rack-mini-profiler', '~> 2.0'

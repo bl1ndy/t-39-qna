@@ -279,7 +279,7 @@ Devise.setup do |config|
   config.omniauth :vkontakte,
                   Rails.application.credentials[Rails.env.to_sym][:vkontakte][:app_id],
                   Rails.application.credentials[Rails.env.to_sym][:vkontakte][:app_secret],
-                  redirect_url: 'http://127.0.0.1:3000/users/auth/vkontakte/callback',
+                  redirect_url: Rails.application.credentials[Rails.env.to_sym][:vkontakte][:redirect_url],
                   client_options: { auth_scheme: 'request_body' }
 
   # ==> Warden configuration
