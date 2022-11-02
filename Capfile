@@ -8,8 +8,9 @@ require 'capistrano/deploy'
 require 'capistrano/rbenv'
 require 'capistrano/bundler'
 require 'capistrano/rails'
-require 'capistrano/passenger'
+# require 'capistrano/passenger'
 require 'thinking_sphinx/capistrano'
+require 'capistrano3/unicorn'
 
 require 'whenever/capistrano'
 set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }

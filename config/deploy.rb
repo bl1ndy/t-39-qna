@@ -16,6 +16,8 @@ set :keep_releases, 3
 
 before "deploy:assets:precompile", "deploy:yarn_install"
 
+after 'deploy:publishing', 'unicorn:restart'
+
 namespace :deploy do
   desc 'Run rake yarn:install'
   task :yarn_install do

@@ -33,6 +33,7 @@ gem 'slim-rails', '~> 3.5', '>= 3.5.1'
 gem 'thinking-sphinx', '~> 5.4'
 gem 'turbolinks', '~> 5'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+gem 'unicorn', '~> 6.1'
 gem 'webpacker', '~> 5.0'
 gem 'whenever', '~> 1.0', require: false
 
@@ -44,11 +45,12 @@ end
 
 group :development do
   gem 'capistrano', '~> 3.17', '>= 3.17.1', require: false
+  gem 'capistrano3-unicorn', '~> 0.2.1', require: false
   gem 'capistrano-bundler', '~> 2.1', require: false
   gem 'capistrano-passenger', '~> 0.2.1', require: false
   gem 'capistrano-rails', '~> 1.6', '>= 1.6.2', require: false
   gem 'capistrano-rbenv', '~> 2.2', require: false
-  gem 'capistrano-sidekiq', '~> 2.3'
+  gem 'capistrano-sidekiq', '~> 2.3', require: false
   gem 'letter_opener', '~> 1.8', '>= 1.8.1'
   gem 'listen', '~> 3.3'
   gem 'rack-mini-profiler', '~> 2.0'
