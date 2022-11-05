@@ -11,6 +11,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'cocoon', '~> 1.2', '>= 1.2.15'
 gem 'devise', '~> 4.8', '>= 4.8.1'
 gem 'doorkeeper', '~> 5.6'
+gem 'hiredis', '~> 0.6.3'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.5'
 gem 'mysql2', '~> 0.5.4'

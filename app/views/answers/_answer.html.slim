@@ -1,56 +1,57 @@
-div id="answer-#{answer.id}" class="card mb-3"
-  div class="card-header small text-muted"
-    - if current_user
-      div class="d-flex justify-content-center"
-        = render 'answers/vote', answer: answer, user_vote: answer.votes.find_by(user: current_user)
+- cache answer do
+  div id="answer-#{answer.id}" class="card mb-3"
+    div class="card-header small text-muted"
+      - if current_user
+        div class="d-flex justify-content-center"
+          = render 'answers/vote', answer: answer, user_vote: answer.votes.find_by(user: current_user)
 
-    div class="answer-info text-center"
-      => "Posted #{time_ago_in_words(answer.created_at)} ago by"
-      span.text-info
-        => answer.user.email
+      div class="answer-info text-center"
+        => "Posted #{time_ago_in_words(answer.created_at)} ago by"
+        span.text-info
+          => answer.user.email
 
-      - if answer == @best_answer
-        span class="best-label badge bg-success rounded-pill"
-          | Best answer
+        - if answer == @best_answer
+          span class="best-label badge bg-success rounded-pill"
+            | Best answer
 
-  .card-body
-    .answer-body
-      => answer.body
+    .card-body
+      .answer-body
+        => answer.body
 
-    hr
+      hr
 
-    - if answer.files.attached?
-      div class="answer-files mt-3"
-        label.small Files
-        = render partial: 'answers/file', collection: answer.files, locals: { answer: }
+      - if answer.files.attached?
+        div class="answer-files mt-3"
+          label.small Files
+          = render partial: 'answers/file', collection: answer.files, locals: { answer: }
 
-    - if answer.links.any?
-      div class="answer-links mt-3"
-        label.small Links
-        = render partial: 'answers/link', collection: answer.links, locals: { answer: }
+      - if answer.links.any?
+        div class="answer-links mt-3"
+          label.small Links
+          = render partial: 'answers/link', collection: answer.links, locals: { answer: }
 
-    div class="mt-3 hidden" id="edit-answer-#{answer.id}"
-      = render 'answers/edit_form', answer: answer
+      div class="mt-3 hidden" id="edit-answer-#{answer.id}"
+        = render 'answers/edit_form', answer: answer
 
-    div.comments
-      = render answer.comments
+      div.comments
+        = render answer.comments
 
-    - if current_user
-      = render 'comments/form', commentable: answer, comment: @answer_comment
+      - if current_user
+        = render 'comments/form', commentable: answer, comment: @answer_comment
 
-  div class="card-footer small text-muted"
-    - if policy(answer).update?
-      => link_to 'Edit', '#', class: 'edit-answer-link btn btn-sm btn-warning', data: { answer_id: answer.id }
+    div class="card-footer small text-muted"
+      - if policy(answer).update?
+        => link_to 'Edit', '#', class: 'edit-answer-link btn btn-sm btn-warning', data: { answer_id: answer.id }
 
-    - if policy(answer).destroy?
-      => link_to 'Delete',
-                 answer_path(answer),
-                 method: :delete, data: { confirm: 'Are you sure?' }, remote: true,
-                 class: 'btn btn-sm btn-danger answer-delete-link'
+      - if policy(answer).destroy?
+        => link_to 'Delete',
+                   answer_path(answer),
+                   method: :delete, data: { confirm: 'Are you sure?' }, remote: true,
+                   class: 'btn btn-sm btn-danger answer-delete-link'
 
-    - if policy(answer).best?
-      = button_to 'Best',
-                  best_answer_path(answer),
-                  form: { class: 'd-inline-block' },
-                  class: "best-answer-button btn btn-sm btn-success #{'hidden' if answer == @best_answer}",
-                  remote: true
+      - if policy(answer).best?
+        = button_to 'Best',
+                    best_answer_path(answer),
+                    form: { class: 'd-inline-block' },
+                    class: "best-answer-button btn btn-sm btn-success #{'hidden' if answer == @best_answer}",
+                    remote: true
