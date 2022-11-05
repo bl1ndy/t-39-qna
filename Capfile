@@ -13,7 +13,7 @@ require 'thinking_sphinx/capistrano'
 require 'capistrano3/unicorn'
 
 require 'whenever/capistrano'
-set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
+set :whenever_identifier, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
 
 require 'capistrano/sidekiq'
 install_plugin Capistrano::Sidekiq
