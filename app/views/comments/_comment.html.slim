@@ -1,9 +1,8 @@
 - if comment.persisted?
-  - cache comment do
-    div id="comment-#{comment.id}" class="mb-3 small"
-      => comment.body
-      span.text-info
-        ' - #{comment.user.email}
-      | about #{time_ago_in_words(comment.created_at)} ago
+  div id="comment-#{comment.id}" class="mb-3 small"
+    => comment.body
+    span.text-info
+      ' - #{comment.user.email}
+    | about #{time_ago_in_words(comment.created_at)} ago
 
-      hr
+    hr

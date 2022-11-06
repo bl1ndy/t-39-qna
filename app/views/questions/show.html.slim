@@ -1,81 +1,81 @@
-- cache @question do
-  div id="question-#{@question.id}" data-question-id="#{@question.id}"
-    .question
-      div class="row row-cols-lg-2"
-        - if current_user
-          div class="col-lg-2 d-flex justify-content-center"
-            = render 'vote'
 
-        div class="col-lg-10"
-          h1.question-title
-            => @question.title
-
-          - if policy(@question).update?
-            .question-control
-              => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
-
-              - if policy(@question).destroy?
-                = link_to 'Delete',
-                          question_path(@question),
-                          method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
-                          class: 'btn btn-sm btn-danger'
-
-          div class="hidden edit-question-form mt-3"
-            = render 'edit_form'
-
-          div class="mt-3 small text-muted"
-            => "Asked #{time_ago_in_words(@question.created_at)} ago by"
-            span.text-info
-              = @question.user.email
-
-            div
-              - if @question.reward
-                | Author offers a Reward for Best Answer!
-
-          - if current_user
-            = render 'subscribe'
-
-      hr
-
-      div class="question-body mb-3"
-        = @question.body
-
-      hr
-
-      div.comments
-        = render @question.comments
-
+div id="question-#{@question.id}" data-question-id="#{@question.id}"
+  .question
+    div class="row row-cols-lg-2"
       - if current_user
-        = render 'comments/form', commentable: @question, comment: @question_comment
+        div class="col-lg-2 d-flex justify-content-center"
+          = render 'vote'
 
-      .row
-        div class="col mb-3 question-files-card #{'hidden' unless @question.files.attached?}"
-          .card
-            .card-header
-              label.small Files
+      div class="col-lg-10"
+        h1.question-title
+          => @question.title
 
-            div class="question-files card-body"
-              = render partial: 'file', collection: @question.files
+        - if policy(@question).update?
+          .question-control
+            => link_to 'Edit', '#', class: 'edit-question-link btn btn-sm btn-warning'
 
-        div class="col question-links-card #{'hidden' if @question.links.empty?}"
-          .card
-            .card-header
-              label.small Links
+            - if policy(@question).destroy?
+              = link_to 'Delete',
+                        question_path(@question),
+                        method: :delete, data: { turbo: false, confirm: 'Are you sure?' },
+                        class: 'btn btn-sm btn-danger'
 
-            div class="question-links card-body"
-              = render partial: 'link', collection: @question.links
+        div class="hidden edit-question-form mt-3"
+          = render 'edit_form'
 
-  h3.mt-3 Answers
+        div class="mt-3 small text-muted"
+          => "Asked #{time_ago_in_words(@question.created_at)} ago by"
+          span.text-info
+            = @question.user.email
 
-  div class="answers ms-lg-5 mt-3"
-    - if @best_answer
-      = render @best_answer
-    = render @answers
+          div
+            - if @question.reward
+              | Author offers a Reward for Best Answer!
 
-  - if user_signed_in?
-    .new-answer
-      = render 'new_answer', answer: @answer
+        - if current_user
+          = render 'subscribe'
 
-  div class="toast-container position-fixed bottom-0 end-0 p-3"
-    div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000"
-      div class="toast-body bg-warning"
+    hr
+
+    div class="question-body mb-3"
+      = @question.body
+
+    hr
+
+    div.comments
+      = render @question.comments
+
+    - if current_user
+      = render 'comments/form', commentable: @question, comment: @question_comment
+
+    .row
+      div class="col mb-3 question-files-card #{'hidden' unless @question.files.attached?}"
+        .card
+          .card-header
+            label.small Files
+
+          div class="question-files card-body"
+            = render partial: 'file', collection: @question.files
+
+      div class="col question-links-card #{'hidden' if @question.links.empty?}"
+        .card
+          .card-header
+            label.small Links
+
+          div class="question-links card-body"
+            = render partial: 'link', collection: @question.links
+
+h3.mt-3 Answers
+
+div class="answers ms-lg-5 mt-3"
+  - if @best_answer
+    = render @best_answer
+  = render @answers
+
+- if user_signed_in?
+  .new-answer
+    = render 'new_answer', answer: @answer
+
+div class="toast-container position-fixed bottom-0 end-0 p-3"
+  div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000"
+    div class="toast-body bg-warning"
